@@ -8,10 +8,10 @@
 
 # Usage
 1. 點擊圖片區域上方的 < 全圖片下載 > 會開始打包該區域內的圖片。
-<img src="https://imgur.com/SyRh7mZ" />
+<img src="https://i.imgur.com/SyRh7mZ.png" />
 2. 擷取圖片連結並下載中。
-<img src="https://imgur.com/FT7rY3Z" />
+<img src="https://i.imgur.com/FT7rY3Z.png" />
 3. 將圖片打包成 ZIP 檔案中。
-<img src="https://imgur.com/K6IQ8Cj" />
+<img src="https://i.imgur.com/K6IQ8Cj.png" />
 4. 下載完成。
-<img src="https://imgur.com/zP1QGMc" />
+<img src="https://i.imgur.com/zP1QGMc.png" />
