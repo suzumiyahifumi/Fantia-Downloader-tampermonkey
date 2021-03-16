@@ -11,14 +11,14 @@
 
 # Usage
 
-1. 點擊圖片區域上方的 < 全圖片下載 > 會開始打包該區域內的圖片。
+1. 點擊圖片區域上方的 < 全圖片下載 > 會開始打包該區域內的圖片。<br>
 <img src="https://i.imgur.com/SyRh7mZ.png" />
 
-2. 擷取圖片連結並下載中。
+2. 擷取圖片連結並下載中。<br>
 <img src="https://i.imgur.com/FT7rY3Z.png" />
 
-3. 將圖片打包成 ZIP 檔案中。
+3. 將圖片打包成 ZIP 檔案中。<br>
 <img src="https://i.imgur.com/K6IQ8Cj.png" />
 
-4. 下載完成。
+4. 下載完成。<br>
 <img src="https://i.imgur.com/zP1QGMc.png" />
