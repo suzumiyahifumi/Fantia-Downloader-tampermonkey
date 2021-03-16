@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      1.2
 // @description  try to take over the world!
 // @author       suzumiyahifumi
 // @match        https://fantia.jp/posts/*
@@ -29,8 +29,6 @@
     }
 
     var init = setInterval(()=>{
-        console.log($('div.btn-group-tabs').length)
-        console.log($('nav.post-next-prev-buttons').length)
         if($('nav.post-next-prev-buttons').length != 0){
             if($('div.btn-group-tabs').length != 0){
                 window.getDownLoadButton();
