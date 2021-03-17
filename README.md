@@ -16,17 +16,17 @@ Check source code on GitHub.<br>
 # Usage
 
 1. 點擊圖片區域上方的 < 全圖片下載 > 會開始打包該區域內的圖片。<br>
-1. Click < Download Picture > at the top of the picture area to packaging the pictures. <br>
+Click < Download Picture > at the top of the picture area to packaging the pictures. <br>
 <img src="https://i.imgur.com/SyRh7mZ.png" />
 
 2. 擷取圖片連結並下載中。<br>
-2. Retrieving the image link and downloading. <br>
+Retrieving the image link and downloading. <br>
 <img src="https://i.imgur.com/FT7rY3Z.png" />
 
 3. 將圖片打包成 ZIP 檔案中。<br>
-3. Pack the picture into a ZIP file. <br>
+Pack the picture into a ZIP file. <br>
 <img src="https://i.imgur.com/K6IQ8Cj.png" />
 
 4. 下載完成。<br>
-4. Download completed.<>
+Download completed.<>
 <img src="https://i.imgur.com/zP1QGMc.png" />
