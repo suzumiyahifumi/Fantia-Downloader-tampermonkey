@@ -28,5 +28,5 @@ Pack the picture into a ZIP file. <br>
 <img src="https://i.imgur.com/K6IQ8Cj.png" />
 
 4. 下載完成。<br>
-Download completed.<>
+Download completed.<br>
 <img src="https://i.imgur.com/zP1QGMc.png" />
