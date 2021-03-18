@@ -3,11 +3,11 @@
 // @name         Fantia downloader
 // @namespace    http://tampermonkey.net/
 // @version      1.2
-// @description  try to take over the world!
+// @description  Download your Fantia rewards more easily! 
 // @author       suzumiyahifumi
 // @match        https://fantia.jp/posts/*
 // @icon         https://www.google.com/s2/favicons?domain=fantia.jp
-// @require https://code.jquery.com/jquery-3.4.1.min.js
+// @require      https://code.jquery.com/jquery-3.4.1.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js
 // @grant        none
 // ==/UserScript==
