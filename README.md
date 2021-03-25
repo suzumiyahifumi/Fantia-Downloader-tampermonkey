@@ -12,7 +12,7 @@ You can install this script from greasyfork.<br>
 ### 可以在 GitHub 上看到維護的 code:<br>
 Check source code on GitHub.<br>
 [Fantia-Downloader-tampermonkey](https://github.com/suzumiyahifumi/Fantia-Downloader-tampermonkey)
-### 注意！ watch out! 
+# 注意！ watch out! 
 請使用 Firefox 來安裝此腳本。由於 Chrome 在跨域加載圖片上似乎有些問題，詳細內容可以查閱這裡：<br>
 [ The Image tag with crossOrigin=“Anonymous” can't load success ](https://stackoverflow.com/questions/49503171/the-image-tag-with-crossorigin-anonymous-cant-load-success-from-s3)<br>
 我嘗試使用其他方法，但是在 chrome 上依然無法奏效！[ 參考這裡 ](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image)<br>
