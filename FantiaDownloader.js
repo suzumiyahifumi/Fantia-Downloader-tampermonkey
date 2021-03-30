@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name         Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Download your Fantia rewards more easily! 
 // @author       suzumiyahifumi
 // @match        https://fantia.jp/posts/*
@@ -76,6 +76,9 @@
 						downloadB.find('span').text(`壓縮檔案中`);
 						zip.generateAsync({
 							type: "blob"
+						},
+						function updateCallback(metadata) {
+							downloadB.find('span').text(`壓縮：${metadata.percent.toFixed(2)} %`);
 						}).then(function (content) {
 							downloadB.find('i').removeClass('fa-download2').addClass('fa-download');
 							downloadB.removeClass(['active', 'hdr']);
