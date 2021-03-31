@@ -18,6 +18,7 @@ I try to fix this problem, but I think it is not my problem also not CORS. Becau
 
 # Usage
 
+### Please run this script on Firefox.
 1. 點擊圖片區域上方的 < 全圖片下載 > 會開始打包該區域內的圖片。<br>
 Click < Download Picture > at the top of the picture area to packaging the pictures. <br>
 <img src="https://i.imgur.com/SyRh7mZ.png" />
