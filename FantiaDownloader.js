@@ -356,7 +356,8 @@
 					boxTitle: `Image Box Title`,
 					"imgIndex:0": `Index for image, Number is first index number.`,
 					postDate: `Post Date`,
-					taskDate: `Download Date`
+					taskDate: `Download Date`,
+					ext: `Filename Extension`
 				},
 				ja: {
 					downloadImg: `ダウンロード`,
@@ -386,7 +387,8 @@
 					boxTitle: `イラストボックスのタイトル`,
 					"imgIndex:0": `画像のインデックス、番号は最初のインデックス番号です。`,
 					postDate: `リリース時間`,
-					taskDate: `ダウンロード時間`
+					taskDate: `ダウンロード時間`,
+					ext: `拡張子`
 				},
 				zh: {
 					downloadImg: `全圖片下載`,
@@ -416,7 +418,8 @@
 					boxTitle: `圖片區標題`,
 					"imgIndex:0": `檔案排序號，數字決定起始數字`,
 					postDate: `投稿日期`,
-					taskDate: `下載日期`
+					taskDate: `下載日期`,
+					ext: `檔案副檔名`
 				}
 			};
 			return (key) ? defaultSetting[lang || this.lang][key] : defaultSetting[lang || this.lang];
@@ -482,7 +485,7 @@
 							<th>${setting.getDefault(`tableParams`, lang)}</th>
 							<th>${setting.getDefault(`tableMean`, lang)}</th>
 						</tr>`;
-			let a = [`user`, `uid`, `postTitle`, `postId`, `boxTitle`, `imgIndex:0`, `postDate`, `taskDate`].forEach((p, i) => {
+			let a = [`user`, `uid`, `postTitle`, `postId`, `boxTitle`, `imgIndex:0`, `postDate`, `taskDate`, `ext`].forEach((p, i) => {
 				table += `<tr style="background-color: ${(i%2 == 0)?`#71b6ff2b`:`#fff0`};">
 							<td style="border-right: 1px solid #131313;">{${p}}</td>
 							<td style="border-left: 1px solid #131313;">${setting.getDefault(p, lang)}</td>
