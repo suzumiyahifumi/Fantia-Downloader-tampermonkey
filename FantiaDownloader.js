@@ -1,6 +1,8 @@
 /* jshint esversion: 9 */
 // ==UserScript==
 // @name         Fantia downloader
+// @name:en      Fantia downloader
+// @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
 // @version      2.1
 // @description  Download your Fantia rewards more easily! 
