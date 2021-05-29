@@ -1,6 +1,8 @@
 # Fantia-Downloader-tampermonkey
 在 Fantia 的圖片框上增加下載按鈕，點擊後自動打包成 ZIP 並下載儲存。 <br>
-This script will add a download button to the Fanita Image Box for downloading whole image in a ZIP file.
+新功能： 自定義下載名稱！ <br>
+This script will add a download button to the Fanita Image Box for downloading whole image in a ZIP file.<br>
+new functionality: Rename the download file!
 ### 請搭配 Tampermonkey 服用:<br>
 Please use this script with [Tampermonkey](https://www.tampermonkey.net/). <br>
 <br>
@@ -17,6 +19,25 @@ Please run this script on Firefox. If use chrome, You might met a CORS problem b
 I try to fix this problem, but I think it is not my problem also not CORS. Because I use different CORS method to load the image but just fail.
 
 # Usage
+### NEW Version v2.1
+支援3種語言的設定中心！ English、中文、日本語 <br>
+自定義下載名稱！ 可使用Cookie紀錄設定！ <br>
+New Setting Center support in three languages! English、中文、日本語 <br>
+Rename the download file! Can save setting with Cookie! <br>
+
+1. 點擊右下角的設定紐進入設定！預設不使用 Cookie！<br>
+Click < Setting Center > which locate at right bottom of window! Don't apply Cookie is Default setting!<br>
+<img src="https://i.imgur.com/e9AsjhV.png" />
+<img src="https://i.imgur.com/cHDJipA.png" />
+
+2. 點擊 < 作者特訂 > 可以針對創作者設定檔案名稱！請開啟 Cookie 紀錄本設定！<br>
+Click < Author Save > to set file name for specific creator! Please apply Cookie Save!<br>
+<img src="https://i.imgur.com/MwEVMzt.png" />
+
+### About Setting Center Style
+如果想使用 "毛玻璃主題" 請在 Firefox 的 "about:config" 中開啟 "layout.css.backdrop-filter.enabled"!<br>
+Please open the "layout.css.backdrop-filter.enabled" in Firefox "about:config" to get the Blur style!<br>
+<img src="https://i.imgur.com/fKq3fay.png" />
 
 ### Please run this script on Firefox.
 1. 點擊圖片區域上方的 < 全圖片下載 > 會開始打包該區域內的圖片。<br>
