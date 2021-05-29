@@ -650,7 +650,7 @@
 				index--;
 				while (index < index + 1) {
 					index++;
-					yield fmt.replace(`{imgIndex}`, (index).toString().padStart(window.getDigits(Number(d)), 0)).replace(`{ext}`, b.mimeType.toString().split(`/`)[1]);
+					yield fmt.replace(`{imgIndex}`, (index).toString().padStart(d, 0)).replace(`{ext}`, b.mimeType.toString().split(`/`)[1]);
 				}
 			}
 
