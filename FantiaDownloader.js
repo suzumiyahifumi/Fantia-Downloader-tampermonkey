@@ -313,7 +313,7 @@
 					fileName: `{imgIndex:0}`
 				},
 				authorSave: {
-					zipName: `[{user}]{posterTitle}_{boxTitle}`,
+					zipName: `[{user}]{postTitle}_{boxTitle}`,
 					fileName: `{boxTitle}_{imgIndex:0}`
 				},
 				authorSaveCheck: `Off`,
