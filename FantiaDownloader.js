@@ -480,7 +480,7 @@
 						</tr>`;
 			let a = [`user`, `uid`, `postTitle`, `postId`, `boxTitle`, `imgIndex:0`, `postDate`, `taskDate`].forEach((p, i) => {
 				table += `<tr style="background-color: ${(i%2 == 0)?`#71b6ff2b`:`#fff0`};">
-							<td style="border-right: 1px solid #131313;">{${p}} :</td>
+							<td style="border-right: 1px solid #131313;">{${p}}</td>
 							<td style="border-left: 1px solid #131313;">${setting.getDefault(p, lang)}</td>
 						</tr>`;
 			});
