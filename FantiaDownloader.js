@@ -6,6 +6,8 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.1
 // @description  Download your Fantia rewards more easily! 
+// @description:en  Download your Fantia rewards more easily! 
+// @description:ja  Download your Fantia rewards more easily! 
 // @author       suzumiyahifumi
 // @match        https://fantia.jp/posts/*
 // @icon         https://www.google.com/s2/favicons?domain=fantia.jp
