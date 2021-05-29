@@ -19,7 +19,7 @@ Please run this script on Firefox. If use chrome, You might met a CORS problem b
 I try to fix this problem, but I think it is not my problem also not CORS. Because I use different CORS method to load the image but just fail.
 
 # Usage
-### NEW Version v2.1
+### NEW Version v2.2
 支援3種語言的設定中心！ English、中文、日本語 <br>
 自定義下載名稱！ 可使用Cookie紀錄設定！ <br>
 New Setting Center support in three languages! English、中文、日本語 <br>
