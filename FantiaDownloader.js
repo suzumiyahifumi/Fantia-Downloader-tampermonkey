@@ -609,7 +609,7 @@
 		paramsParser(fmt, d) {
 			let o = {
 				user: () => {
-					$("h1.fanclub-name>a").attr(`title`);
+					return $("h1.fanclub-name>a").attr(`title`);
 				},
 				uid: () => {
 					return this.authorId;
