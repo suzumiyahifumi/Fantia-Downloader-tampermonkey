@@ -117,7 +117,7 @@
 		position: fixed;
 		z-index: 9999;
 		width: 500px;
-		height: 80vh;
+		height: 90vh;
 		left: calc(50vw - 250px);
 		top: 10vh;
 		background-color: #9090907d;
