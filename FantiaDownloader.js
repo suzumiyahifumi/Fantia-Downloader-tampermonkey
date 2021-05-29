@@ -552,7 +552,7 @@
 		<div class="settingTitleColor" style="width: calc(50% - 1px);height: 2.5em;background-color: #ffffff69;float: left;display: flex;align-items: center;position: relative;margin: 1px auto 1px 1px;">
 			<input id="dateFormatInput" onchange="setting.setCookie({dateFormat: $('#dateFormatInput').val()})" style="margin: 0 auto;background: #ffffff2e;width: 95%;border-style: none;padding: 0.2em;text-align:center;">
 		</div>
-		<div id="paramsTable" class="settingTitleColor" style="width: 100%;height: calc(100% - 10em - 6px);position: relative;background-color: #ffffff69;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;float: left;margin: 1px 0 0 0;">
+		<div id="paramsTable" class="settingTitleColor" style="width: 100%;height: calc(100% - 10em - 6px);position: relative;background-color: #ffffff69;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;float: left;margin: 1px 0 0 0;overflow: auto;">
 		</div>
 	</div>
 	<div class="settingTitleColor" style="width: 95%;height: 2.5em;background-color: #fff0;margin: 10px auto;position: relative;border-radius: 5px;">
