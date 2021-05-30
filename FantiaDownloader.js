@@ -749,11 +749,13 @@
 	};
 
 	window.checkBrowser = (event, callBack) => {
-		if (navigator.userAgent.indexOf("Firefox") != -1) {
-			return callBack(event);
-		} else {
+		let excludes = [];
+		let ex = excludes.map(b => navigator.userAgent.indexOf(b)).filter(b => (b!=-1)?true: false);
+		if (ex.length >= 1) {
 			alert(`請使用 Firefox 下載圖片！\nPlease run this script on Firefox!`);
 			return;
+		} else {
+			return callBack(event);
 		}
 	};
 })();
