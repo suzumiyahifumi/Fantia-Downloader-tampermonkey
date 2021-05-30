@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.2
+// @version      2.3
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -749,13 +749,19 @@
 	};
 
 	window.checkBrowser = (event, callBack) => {
-		let excludes = [];
-		let ex = excludes.map(b => navigator.userAgent.indexOf(b)).filter(b => (b!=-1)?true: false);
-		if (ex.length >= 1) {
-			alert(`請使用 Firefox 下載圖片！\nPlease run this script on Firefox!`);
+		try{
+			let excludes = [];
+			let ex = excludes.map(b => navigator.userAgent.indexOf(b)).filter(b => (b!=-1)?true: false);
+			if (ex.length >= 1) {
+				alert(`請使用 Firefox 下載圖片！\nPlease run this script on Firefox!`);
+				return;
+			} else {
+				return callBack(event);
+			}
+		}
+		catch(err){
+			alert(`出了些問題！你可以嘗試使用 Firefox 下載圖片！\nThere are some ERROR, You can try this script on Firefox!`);
 			return;
-		} else {
-			return callBack(event);
 		}
 	};
 })();
