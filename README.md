@@ -3,6 +3,13 @@
 新功能： 自定義下載名稱！ <br>
 This script will add a download button to the Fanita Image Box for downloading whole image in a ZIP file.<br>
 new functionality: Rename the download file!
+#### NEW Version v2.3
+* 支援 Google Chrome ／ Support Google Chrome.<br>
+* 支援 中文、English、日本語 ／ Support English, 日本語 and 中文.<br>
+* 支援 自訂下載名稱 ／ Support set the format of download file Name by yourself.<br>
+* 支援 儲存設定 ／ Support save setting with Cookie<br>
+* 支援 模糊主題 ／ Support Blur style for setting center.<br>
+
 ### 請搭配 Tampermonkey 服用:<br>
 Please use this script with [Tampermonkey](https://www.tampermonkey.net/). <br>
 <br>
@@ -20,8 +27,8 @@ If you met some ERROR or Bug, Please run this script on Firefox. If use chrome, 
 I try to fix this problem, but I think it is not my problem also not CORS. Because I use different CORS method to load the image but just fail.
 
 # Usage
-### NEW Version v2.3
-開放其他瀏覽器使用！<br>
+#### 支援 Google Chrome <br>
+開放其他瀏覽器使用！ Chrome 也可以用囉！<br>
 支援3種語言的設定中心！ English、中文、日本語 <br>
 自定義下載名稱！ 可使用Cookie紀錄設定！ <br>
 Now, You can use this script on Chrome.<br>
