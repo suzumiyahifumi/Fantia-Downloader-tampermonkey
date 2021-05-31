@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.3
+// @version      2.3.1
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -626,7 +626,7 @@
 		paramsParser(fmt, d) {
 			let o = {
 				user: () => {
-					return $("h1.fanclub-name>a").attr(`title`);
+					return $("h1.fanclub-name>a").text();
 				},
 				uid: () => {
 					return this.authorId;
