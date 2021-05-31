@@ -421,7 +421,7 @@
 					postId: `投稿 ID`,
 					boxTitle: `圖片區標題`,
 					"imgIndex:0": `檔案排序號，數字決定起始數字`,
-					plan: `訂月方案名`,
+					plan: `訂閱方案名`,
 					fee: `瀏覽月費`,
 					postDate: `投稿日期`,
 					taskDate: `下載日期`,
