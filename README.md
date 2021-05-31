@@ -3,7 +3,7 @@
 新功能： 自定義下載名稱！ <br>
 This script will add a download button to the Fanita Image Box for downloading whole image in a ZIP file.<br>
 new functionality: Rename the download file!
-#### NEW Version v2.3
+#### NEW Version v2.4
 * 支援 Google Chrome ／ Support Google Chrome.<br>
 * 支援 中文、English、日本語 ／ Support English, 日本語 and 中文.<br>
 * 支援 自訂下載名稱 ／ Support set the format of download file Name by yourself.<br>
