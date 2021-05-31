@@ -119,7 +119,7 @@
 		width: 500px;
 		height: 90vh;
 		left: calc(50vw - 250px);
-		top: 10vh;
+		top: 5vh;
 		background-color: #9090907d;
 		border-radius: 15px;
 		backdrop-filter: blur(15px);
@@ -128,7 +128,6 @@
 		margin: 0 auto;
 		overflow: auto;
 		min-height: 450px;
-		max-height: 600px;
 	}
 
 	.settingCenterButton:hover {
