@@ -355,6 +355,8 @@
 					postId: `Post ID`,
 					boxTitle: `Image Box Title`,
 					"imgIndex:0": `Index for image, Number is first index number.`,
+					plan: `Name of Plan`,
+					fee: `fee of Plan`,
 					postDate: `Post Date`,
 					taskDate: `Download Date`,
 					ext: `Filename Extension`
@@ -385,7 +387,9 @@
 					postTitle: `投稿のタイトル`,
 					postId: `投稿のID`,
 					boxTitle: `イラストボックスのタイトル`,
-					"imgIndex:0": `画像のインデックス、番号は最初のインデックス番号です。`,
+					"imgIndex:0": `画像のインデックス、番号は最初のインデックス番号です`,
+					plan: `プランの名`,
+					fee: `プランの月料`,
 					postDate: `リリース時間`,
 					taskDate: `ダウンロード時間`,
 					ext: `拡張子`
@@ -417,6 +421,8 @@
 					postId: `投稿 ID`,
 					boxTitle: `圖片區標題`,
 					"imgIndex:0": `檔案排序號，數字決定起始數字`,
+					plan: `訂月方案名`,
+					fee: `瀏覽月費`,
 					postDate: `投稿日期`,
 					taskDate: `下載日期`,
 					ext: `檔案副檔名`
@@ -494,7 +500,7 @@
 							<th>${setting.getDefault(`tableParams`, lang)}</th>
 							<th>${setting.getDefault(`tableMean`, lang)}</th>
 						</tr>`;
-			let a = [`user`, `uid`, `postTitle`, `postId`, `boxTitle`, `imgIndex:0`, `postDate`, `taskDate`, `ext`].forEach((p, i) => {
+			let a = [`user`, `uid`, `postTitle`, `postId`, `boxTitle`, `imgIndex:0`, `plan`, `fee`, `postDate`, `taskDate`, `ext`].forEach((p, i) => {
 				table += `<tr style="background-color: ${(i%2 == 0)?`#71b6ff2b`:`#fff0`};">
 							<td style="border-right: 1px solid #131313;">{${p}}</td>
 							<td style="border-left: 1px solid #131313;">${setting.getDefault(p, lang)}</td>
@@ -639,6 +645,18 @@
 				},
 				boxTitle: () => {
 					return this.button.closest("div.post-content-inner").find('h2').text();
+				},
+				plan: () => {
+					let feeStr = this.button.closest("div.post-content-inner").find(`strong.ng-binding`).text();
+					let match = feeStr.match(new RegExp(/（\d+円）以上限定$/g));
+					if (match != null) return feeStr.replace(match[0], ``);
+					return ``;
+				},
+				fee: () => {
+					let feeStr = this.button.closest("div.post-content-inner").find(`strong.ng-binding`).text();
+					let match = feeStr.match(new RegExp(/（(\d+)円）以上限定$/g));
+					if(match != null) return RegExp.$1;
+					return ``;
 				},
 				postDate: () => {
 					return new Date($(`small.post-date>span`).text()).Format(this.dateFormat);
