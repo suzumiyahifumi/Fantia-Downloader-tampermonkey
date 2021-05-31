@@ -437,7 +437,16 @@
 		}
 
 		changeStyle(mode) {
-
+			let blur = CSS.supports(`backdrop-filter`, `blur(15px)`);
+			switch(mode){
+				case `Blur`:
+				
+					return;
+				case `unBlur`:
+					return;
+				default:
+					return;
+			}
 		}
 
 		changeLang() {
@@ -580,6 +589,7 @@
 			this.zipName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].zipName}.zip`;
 			this.fileName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].fileName}.{ext}`;
 			this.dateFormat = setting.dateFormat;
+			this.d = window.getDigits(Number($($(event.target).closest('div.content-block').find('div.image-thumbnails')[0]).find('img').length));
 			return this;
 		}
 
@@ -645,16 +655,15 @@
 			let s = (/\{imgIndex(\:(\d+))?\}/g.test(fmt)) ? RegExp.$2 : 0;
 			if (/\{imgIndex(\:(\d+))?\}/g.test(fmt)) fmt = fmt.replace(RegExp.$1, ``);
 
-			function* index(fmt, b, s, d) {
-				let index = s || 0;
-				index--;
+			function* index(fmt, s) {
+				let index = Number(s - 1) || 0;
 				while (index < index + 1) {
 					index++;
-					yield fmt.replace(`{imgIndex}`, (index).toString().padStart(d, 0)).replace(`{ext}`, b.mimeType.toString().split(`/`)[1]);
+					yield fmt.replace(`{imgIndex}`, (index).toString().padStart(this.d, 0)).replace(`{ext}`, this.mimeType.toString().split(`/`)[1]);
 				}
 			}
 
-			return index(fmt, this, s, d);
+			return index.call(this, fmt, s);
 		}
 	}
 
