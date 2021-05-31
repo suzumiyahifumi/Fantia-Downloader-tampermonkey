@@ -18,6 +18,7 @@ You can install this script from greasyfork ([Fantia downloader](https://greasyf
 <br>
 ### 可以在 GitHub 上看到維護的 code:<br>
 Check source code on GitHub ([Fantia-Downloader-tampermonkey](https://github.com/suzumiyahifumi/Fantia-Downloader-tampermonkey)).<br>
+
 # 注意！ watch out! 
 如果使用其他瀏覽器時遇到錯誤，<br>
 請使用 Firefox 來安裝此腳本。由於 Chrome 在跨域加載圖片上似乎有些問題，詳細內容可以查閱這裡：<br>
