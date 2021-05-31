@@ -647,13 +647,13 @@
 					return this.button.closest("div.post-content-inner").find('h2').text();
 				},
 				plan: () => {
-					let feeStr = this.button.closest("div.post-content-inner").find(`strong.ng-binding`).text();
+					let feeStr = this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
 					let match = feeStr.match(new RegExp(/（\d+円）以上限定$/g));
 					if (match != null) return feeStr.replace(match[0], ``);
 					return ``;
 				},
 				fee: () => {
-					let feeStr = this.button.closest("div.post-content-inner").find(`strong.ng-binding`).text();
+					let feeStr = this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
 					let match = feeStr.match(new RegExp(/（(\d+)円）以上限定$/g));
 					if(match != null) return RegExp.$1;
 					return ``;
