@@ -766,13 +766,13 @@
 		xhr.open("GET", url);
 		xhr.responseType = "arraybuffer";
 		xhr.onerror = function (error) {
-			console.log(`error`);
+			return new Error(`ERROR`);
 		};
 		xhr.onload = function () {
 			if (xhr.status === 200) {
 				callback(xhr.response, xhr.getResponseHeader("Content-Type"));
 			} else {
-				console.log(`error`);
+				return new Error(`ERROR`);
 			}
 		};
 		xhr.send();
@@ -780,7 +780,7 @@
 
 	window.checkBrowser = (event, callBack) => {
 		try{
-			let excludes = [];
+			let excludes = [`Edge`, `Edg`];
 			let ex = excludes.map(b => navigator.userAgent.indexOf(b)).filter(b => (b!=-1)?true: false);
 			if (ex.length >= 1) {
 				alert(`請使用 Firefox 下載圖片！\nPlease run this script on Firefox!`);
