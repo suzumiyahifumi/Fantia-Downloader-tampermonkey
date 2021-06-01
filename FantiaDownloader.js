@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.4.1
+// @version      2.4.2
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -717,11 +717,9 @@
 			let fileName = downloadB.paramsParser(downloadB.fileName, srcArr.digits);
 			srcArr.forEach((url, i) => {
 				$.get(url, function (data) {
-					let div = document.createElement("div");
-					$(div).html(data);
-					$(div).find('img').attr("id", `${i}_img`);
-					let imgSRC = $(div).find('img').attr("src");
-					$(div).remove();
+					let match = data.match(new RegExp(`<img src="(https://cc.fantia.jp/uploads/post_content_photo/file/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])"`, `g`));
+					if(match == null) return false;
+                    let imgSRC = decodeURI(RegExp.$1.replace(/amp;/g, ``));
 					loadAsArrayBuffer(imgSRC, function (imgData, mimeType) {
 						dataCont += 1;
 						downloadB.changeButton(`log`, `${dataCont} / ${srcArr.length}`);
@@ -780,7 +778,7 @@
 
 	window.checkBrowser = (event, callBack) => {
 		try{
-			let excludes = [`Edge`, `Edg`];
+			let excludes = [];
 			let ex = excludes.map(b => navigator.userAgent.indexOf(b)).filter(b => (b!=-1)?true: false);
 			if (ex.length >= 1) {
 				alert(`請使用 Firefox 下載圖片！\nPlease run this script on Firefox!`);
