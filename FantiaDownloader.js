@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.4
+// @version      2.4.1
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -186,6 +186,10 @@
 
 	let init = setInterval(() => {
 		if ($('nav.post-next-prev-buttons').length != 0) {
+			$(`div.image-thumbnails`).each((i, div) => {
+				let b = $(div).closest('div.content-block').find(`div[ng-if='$ctrl.isVisibleAndMulti()']`);
+				if (b.length == 0) $(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
+			});
 			if ($('div.btn-group-tabs').length != 0) {
 				window.setting = new Setting();
 				window.getDownLoadButton();
