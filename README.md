@@ -36,11 +36,11 @@ Rename the download file! Can save setting with Cookie! <br>
 1. 點擊右下角的設定紐進入設定！預設不使用 Cookie！<br>
 Click < Setting Center > which locate at right bottom of window! Don't apply Cookie is Default setting!<br>
 <img src="https://i.imgur.com/e9AsjhV.png" />
-<img src="https://i.imgur.com/cHDJipA.png" />
+<img src="https://i.imgur.com/ODab7BM.png" />
 
 2. 點擊 < 作者特訂 > 可以針對創作者設定檔案名稱！請開啟 Cookie 紀錄本設定！<br>
 Click < Author Save > to set file name for specific creator! Please apply Cookie Save!<br>
-<img src="https://i.imgur.com/MwEVMzt.png" />
+<img src="https://i.imgur.com/UTDiaER.png" />
 
 ### About Setting Center Style
 如果想使用 "毛玻璃主題" 請在 Firefox 的 "about:config" 中開啟 "layout.css.backdrop-filter.enabled"!<br>
