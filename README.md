@@ -3,13 +3,14 @@
 新功能： 自定義下載名稱！ <br>
 This script will add a download button to the Fanita Image Box for downloading whole image in a ZIP file.<br>
 new functionality: Rename the download file!
-#### NEW Version v2.4
+#### NEW Version v2.5
 * 支援 Firefox、Google Chrome、Edge ／ Support Firefox, Google Chrome, Edge.<br>
 * 支援 中文、English、日本語 ／ Support English, 日本語 and 中文.<br>
 * 支援 自訂下載名稱 ／ Support set the format of download file Name by yourself.<br>
 * 支援 儲存設定 ／ Support save setting with Cookie<br>
 * 支援 模糊主題 ／ Support Blur style for setting center.<br>
 * 支援 單張圖片的post下載 ／ Support single image post download.<br>
+* 支援 ZIP下載與不壓縮下載 ／ Support single zip download and unZip download.<br>
 
 ### 請搭配 Tampermonkey 服用:<br>
 Please use this script with [Tampermonkey](https://www.tampermonkey.net/). <br>
