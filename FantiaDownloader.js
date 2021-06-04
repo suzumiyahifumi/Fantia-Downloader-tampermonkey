@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.4.2
+// @version      2.5
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -64,7 +64,7 @@
 		transition: box-shadow 0.5s;
 		box-shadow: 0 0 10px #000;
 		font-size: 3em;
-		backdrop-filter: blur(1px);
+		backdrop-filter: blur(5px);
 		background-image: url("data:image/svg+xml;charset=UTF-8,<svg enable-background='new 0 0 24 24' height='512' viewBox='0 0 24 24' width='512' xmlns='http://www.w3.org/2000/svg'><path d='m22.683 9.394-1.88-.239c-.155-.477-.346-.937-.569-1.374l1.161-1.495c.47-.605.415-1.459-.122-1.979l-1.575-1.575c-.525-.542-1.379-.596-1.985-.127l-1.493 1.161c-.437-.223-.897-.414-1.375-.569l-.239-1.877c-.09-.753-.729-1.32-1.486-1.32h-2.24c-.757 0-1.396.567-1.486 1.317l-.239 1.88c-.478.155-.938.345-1.375.569l-1.494-1.161c-.604-.469-1.458-.415-1.979.122l-1.575 1.574c-.542.526-.597 1.38-.127 1.986l1.161 1.494c-.224.437-.414.897-.569 1.374l-1.877.239c-.753.09-1.32.729-1.32 1.486v2.24c0 .757.567 1.396 1.317 1.486l1.88.239c.155.477.346.937.569 1.374l-1.161 1.495c-.47.605-.415 1.459.122 1.979l1.575 1.575c.526.541 1.379.595 1.985.126l1.494-1.161c.437.224.897.415 1.374.569l.239 1.876c.09.755.729 1.322 1.486 1.322h2.24c.757 0 1.396-.567 1.486-1.317l.239-1.88c.477-.155.937-.346 1.374-.569l1.495 1.161c.605.47 1.459.415 1.979-.122l1.575-1.575c.542-.526.597-1.379.127-1.985l-1.161-1.494c.224-.437.415-.897.569-1.374l1.876-.239c.753-.09 1.32-.729 1.32-1.486v-2.24c.001-.757-.566-1.396-1.316-1.486zm-10.683 7.606c-2.757 0-5-2.243-5-5s2.243-5 5-5 5 2.243 5 5-2.243 5-5 5z'/></svg>");
 		background-size: 30px;
 		background-repeat: no-repeat;
@@ -174,7 +174,7 @@
 
 	window.getDownLoadButton = () => {
 		$('div.btn-group-tabs').each((i, div) => {
-			$(div).append(`<button class="btn btn-default btn-md downloadButton" onclick="getImg(event)"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${setting.getDefault('downloadImg')}</span></button>`);
+			$(div).append(`<button class="btn btn-default btn-md downloadButton zip" onclick="getImg(event)"><i class="fa fa-file-archive-o fa-2x" style="color: #f9a63b  !important;"></i> <span class="btn-text-sub downloadSpanZip" style="color: #f9a63b  !important;">${setting.getDefault('downloadImgZip')}</span></button><button class="btn btn-default btn-md downloadButton file" onclick="getImg(event)"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${setting.getDefault('downloadImg')}</span></button>`);
 			$('#set').remove();
 		});
 		$("div#page").append(`<div id="settingCenter" onclick="openSettingCenter()"></div>`);
@@ -333,6 +333,7 @@
 			let defaultSetting = {
 				en: {
 					downloadImg: `Download Images`,
+					downloadImgZip: `Download ZIP`,
 					retrieving: `Retrieving Link`,
 					zipping: `Zipping`,
 					processing: `Processing`,
@@ -366,6 +367,7 @@
 				},
 				ja: {
 					downloadImg: `ダウンロード`,
+					downloadImgZip: `ZIPダウンロード`,
 					retrieving: `擷取連結中`,
 					zipping: `zip圧縮`,
 					processing: `圧縮`,
@@ -399,6 +401,7 @@
 				},
 				zh: {
 					downloadImg: `全圖片下載`,
+					downloadImgZip: `ZIP 下載`,
 					retrieving: `擷取連結中`,
 					zipping: `壓縮檔案中`,
 					processing: `壓縮`,
@@ -474,6 +477,7 @@
 			$("#saveSetting").text(this.getDefault(`saveSetting`, lang));
 			$("#closeSetting").text(this.getDefault(`closeSetting`, lang));
 			$(".downloadSpan").text(this.getDefault('downloadImg', lang));
+			$(".downloadSpanZip").text(this.getDefault('downloadImgZip', lang));
 			$("#paramsTable").html(this.paramsTemplate(this.lang));
 			return;
 		}
@@ -595,6 +599,7 @@
 	class downloadButton {
 		constructor(event) {
 			this.button = ($(event.target).is("button")) ? $(event.target) : $(event.target).closest("button");
+			this.type = (this.button.hasClass(`zip`))? `zip` : `file`;
 			this.zipName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].zipName}.zip`;
 			this.fileName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].fileName}.{ext}`;
 			this.dateFormat = setting.dateFormat;
@@ -607,7 +612,11 @@
 			switch (mode) {
 				case `start`:
 					button.addClass(['active', 'hdr']);
-					button.find('i').removeClass('fa-download').addClass('fa-download2');
+					if(this.type == `file`){
+						button.find('i').removeClass('fa-download').addClass(['fa-spinner', 'fa-pulse']);
+					} else {
+						button.find('i').removeClass('fa-file-archive-o').addClass(['fa-spinner', 'fa-pulse']);
+					}
 					break;
 				case `catchLink`:
 					button.find('span').text(setting.getDefault(`retrieving`));
@@ -619,7 +628,11 @@
 					button.find('span').text(setting.getDefault(`zipping`));
 					break;
 				case `end`:
-					button.find('i').removeClass('fa-download2').addClass('fa-download');
+					if (this.type == `file`) {
+						button.find('i').removeClass(['fa-spinner', 'fa-pulse']).addClass('fa-download');
+					} else {
+						button.find('i').removeClass(['fa-spinner', 'fa-pulse']).addClass('fa-file-archive-o');
+					}
 					button.removeClass(['active', 'hdr']);
 					button.find('span').text(setting.getDefault(`done`));
 					break;
@@ -711,7 +724,7 @@
 			});
 			downloadB.changeButton(`log`, `${dataCont} / ${srcArr.length}`);
 
-			var zip = new JSZip();
+			var zip = (downloadB.type == `zip`) ? new JSZip() : undefined;
 			srcArr.digits = window.getDigits(Number(srcArr.length));
 			let zipName = downloadB.paramsParser(downloadB.zipName, srcArr.digits);
 			let fileName = downloadB.paramsParser(downloadB.fileName, srcArr.digits);
@@ -724,23 +737,35 @@
 						dataCont += 1;
 						downloadB.changeButton(`log`, `${dataCont} / ${srcArr.length}`);
 						downloadB.mimeType = mimeType;
-						zip.file(fileName.next().value, imgData);
-						if (dataCont == srcArr.length) {
-							downloadB.changeButton(`pickUp`);
-							zip.generateAsync({
-									type: "blob"
-								},
-								function updateCallback(metadata) {
-									downloadB.changeButton(`log`, `${setting.getDefault(`processing`)}：${metadata.percent.toFixed(2)} %`);
-								}).then(function (content) {
-								downloadB.changeButton('end');
-								let tag = document.createElement('a');
-								tag.href = (URL || webkitURL).createObjectURL(content);
-								tag.download = zipName.next().value;
-								document.body.appendChild(tag);
-								tag.click();
-								document.body.removeChild(tag);
-							});
+						if (zip == undefined) {
+							console.log(dataCont, srcArr.length)
+							if (dataCont == srcArr.length) downloadB.changeButton('end');
+							let tag = document.createElement('a');
+							let content = new Blob( [ imgData ], { type: mimeType } );	
+							tag.href = (URL || webkitURL).createObjectURL(content);
+							tag.download = fileName.next().value;
+							document.body.appendChild(tag);
+							tag.click();
+							document.body.removeChild(tag);
+						} else {
+							zip.file(fileName.next().value, imgData);
+							if (dataCont == srcArr.length) {
+								downloadB.changeButton(`pickUp`);
+								zip.generateAsync({
+										type: "blob"
+									},
+									function updateCallback(metadata) {
+										downloadB.changeButton(`log`, `${setting.getDefault(`processing`)}：${metadata.percent.toFixed(2)} %`);
+									}).then(function (content) {
+									downloadB.changeButton('end');
+									let tag = document.createElement('a');
+									tag.href = (URL || webkitURL).createObjectURL(content);
+									tag.download = zipName.next().value;
+									document.body.appendChild(tag);
+									tag.click();
+									document.body.removeChild(tag);
+								});
+							}
 						}
 					});
 				});
@@ -788,6 +813,7 @@
 			}
 		}
 		catch(err){
+			console.log(err);
 			alert(`出了些問題！你可以嘗試使用 Firefox 下載圖片！\nThere are some ERROR, You can try this script on Firefox!`);
 			return;
 		}
