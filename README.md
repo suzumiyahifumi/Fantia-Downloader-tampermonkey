@@ -3,6 +3,11 @@
 新功能： 自定義下載名稱！ <br>
 This script will add a download button to the Fanita Image Box for downloading whole image in a ZIP file.<br>
 new functionality: Rename the download file!
+
+* 可以取得瀏覽器擴充版本（You can get extension version for Firefox and Chrome）：
+  1. Firefox：[Fantia downloader](https://addons.mozilla.org/zh-TW/firefox/addon/fantia-downloader/)
+  2. Chrome： 上架中
+
 #### NEW Version v2.5
 * 支援 Firefox、Google Chrome、Edge ／ Support Firefox, Google Chrome, Edge.<br>
 * 支援 中文、English、日本語 ／ Support English, 日本語 and 中文.<br>
@@ -48,7 +53,7 @@ Click < Author Save > to set file name for specific creator! Please apply Cookie
 Please open the "layout.css.backdrop-filter.enabled" in Firefox "about:config" to get the Blur style!<br>
 <img src="https://i.imgur.com/fKq3fay.png" />
 
-### Please run this script on Firefox.
+### If met some ERROR, Please try to run this script on Firefox.
 1. 點擊圖片區域上方的 < 全圖片下載 > 會開始打包該區域內的圖片。<br>
 Click < Download Picture > at the top of the picture area to packaging the pictures. <br>
 <img src="https://i.imgur.com/SyRh7mZ.png" />
