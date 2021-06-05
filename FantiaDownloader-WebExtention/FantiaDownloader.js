@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.5
+// @version      2.5.1
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -21,7 +21,7 @@
 
 	Date.prototype.Format = function (fmt) {
 		let o = {
-			"M+": this.getMonth() + 1, 
+			"M+": this.getMonth() + 1,
 			"d+": this.getDate(),
 			"h+": this.getHours(),
 			"m+": this.getMinutes(),
@@ -253,7 +253,7 @@
 					dateFormat: this.cookie.dateFormat,
 					domain: `https://fantia.jp`,
 					path: `/`,
-					expires: date.toUTCString()
+					Expires: date.toUTCString()
 				};
 				cookie.generalSaveZIP = this.cookie.generalSave.zipName;
 				cookie.generalSaveFile = this.cookie.generalSave.fileName;
@@ -268,7 +268,7 @@
 				date.setDate(date.getTime() - 1);
 				let cookie = {
 					cookieSave: 'Off',
-					expires: date.toUTCString()
+					Expires: date.toUTCString()
 				};
 				cookie[`authorId_${this.authorId}`] = 'Off';
 				this.updateCookie(cookie);
@@ -277,8 +277,9 @@
 		}
 
 		updateCookie(cookie = undefined) {
+			let Expires = cookie.Expires;
 			for (let [key, value] of Object.entries(cookie)) {
-				document.cookie = `${key}=${value}`;
+				document.cookie = `${key}=${value}; Expires=${Expires}`;
 			}
 			this.cookieOri = document.cookie;
 			return this.cookieOri;
@@ -450,9 +451,9 @@
 
 		changeStyle(mode) {
 			let blur = CSS.supports(`backdrop-filter`, `blur(15px)`);
-			switch(mode){
+			switch (mode) {
 				case `Blur`:
-				
+
 					return;
 				case `unBlur`:
 					return;
@@ -599,7 +600,7 @@
 	class downloadButton {
 		constructor(event) {
 			this.button = ($(event.target).is("button")) ? $(event.target) : $(event.target).closest("button");
-			this.type = (this.button.hasClass(`zip`))? `zip` : `file`;
+			this.type = (this.button.hasClass(`zip`)) ? `zip` : `file`;
 			this.zipName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].zipName}.zip`;
 			this.fileName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].fileName}.{ext}`;
 			this.dateFormat = setting.dateFormat;
@@ -612,7 +613,7 @@
 			switch (mode) {
 				case `start`:
 					button.addClass(['active', 'hdr']);
-					if(this.type == `file`){
+					if (this.type == `file`) {
 						button.find('i').removeClass('fa-download').addClass(['fa-spinner', 'fa-pulse']);
 					} else {
 						button.find('i').removeClass('fa-file-archive-o').addClass(['fa-spinner', 'fa-pulse']);
@@ -671,7 +672,7 @@
 				fee: () => {
 					let feeStr = this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
 					let match = feeStr.match(new RegExp(/（(\d+)円）以上限定$/g));
-					if(match != null) return RegExp.$1;
+					if (match != null) return RegExp.$1;
 					return ``;
 				},
 				postDate: () => {
@@ -731,8 +732,8 @@
 			srcArr.forEach((url, i) => {
 				$.get(url, function (data) {
 					let match = data.match(new RegExp(`<img src="(https://cc.fantia.jp/uploads/post_content_photo/file/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])"`, `g`));
-					if(match == null) return false;
-                    let imgSRC = decodeURI(RegExp.$1.replace(/amp;/g, ``));
+					if (match == null) return false;
+					let imgSRC = decodeURI(RegExp.$1.replace(/amp;/g, ``));
 					loadAsArrayBuffer(imgSRC, function (imgData, mimeType) {
 						dataCont += 1;
 						downloadB.changeButton(`log`, `${dataCont} / ${srcArr.length}`);
@@ -741,7 +742,9 @@
 							console.log(dataCont, srcArr.length)
 							if (dataCont == srcArr.length) downloadB.changeButton('end');
 							let tag = document.createElement('a');
-							let content = new Blob( [ imgData ], { type: mimeType } );	
+							let content = new Blob([imgData], {
+								type: mimeType
+							});
 							tag.href = (URL || webkitURL).createObjectURL(content);
 							tag.download = fileName.next().value;
 							document.body.appendChild(tag);
@@ -802,17 +805,16 @@
 	};
 
 	window.checkBrowser = (event, callBack) => {
-		try{
+		try {
 			let excludes = [];
-			let ex = excludes.map(b => navigator.userAgent.indexOf(b)).filter(b => (b!=-1)?true: false);
+			let ex = excludes.map(b => navigator.userAgent.indexOf(b)).filter(b => (b != -1) ? true : false);
 			if (ex.length >= 1) {
 				alert(`請使用 Firefox 下載圖片！\nPlease run this script on Firefox!`);
 				return;
 			} else {
 				return callBack(event);
 			}
-		}
-		catch(err){
+		} catch (err) {
 			console.log(err);
 			alert(`出了些問題！你可以嘗試使用 Firefox 下載圖片！\nThere are some ERROR, You can try this script on Firefox!`);
 			return;
