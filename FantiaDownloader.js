@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.5
+// @version      2.5.1
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -253,7 +253,7 @@
 					dateFormat: this.cookie.dateFormat,
 					domain: `https://fantia.jp`,
 					path: `/`,
-					expires: date.toUTCString()
+					Expires: date.toUTCString()
 				};
 				cookie.generalSaveZIP = this.cookie.generalSave.zipName;
 				cookie.generalSaveFile = this.cookie.generalSave.fileName;
@@ -268,7 +268,7 @@
 				date.setDate(date.getTime() - 1);
 				let cookie = {
 					cookieSave: 'Off',
-					expires: date.toUTCString()
+					Expires: date.toUTCString()
 				};
 				cookie[`authorId_${this.authorId}`] = 'Off';
 				this.updateCookie(cookie);
@@ -277,8 +277,9 @@
 		}
 
 		updateCookie(cookie = undefined) {
+			let Expires = cookie.Expires;
 			for (let [key, value] of Object.entries(cookie)) {
-				document.cookie = `${key}=${value}`;
+				document.cookie = `${key}=${value}; Expires=${Expires}`;
 			}
 			this.cookieOri = document.cookie;
 			return this.cookieOri;
