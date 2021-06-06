@@ -5,8 +5,8 @@ This script will add a download button to the Fanita Image Box for downloading w
 new functionality: Rename the download file!
 
 * 可以取得瀏覽器擴充版本（You can get extension version for Firefox and Chrome）：
-  1. Firefox：[Fantia downloader](https://addons.mozilla.org/zh-TW/firefox/addon/fantia-downloader/)
-  2. Chrome： 上架中
+  1. Firefox：[Fantia downloader Firefox](https://addons.mozilla.org/zh-TW/firefox/addon/fantia-downloader/)
+  2. Chrome： [Fantia downloader Chrome](https://chrome.google.com/webstore/detail/fantia-downloader/cfkejojncmolgahkabegcdbcbmnghhcp?hl=zh-TW&authuser=0)
 
 #### NEW Version v2.5
 * 支援 Firefox、Google Chrome、Edge ／ Support Firefox, Google Chrome, Edge.<br>
