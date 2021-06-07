@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.5.1
+// @version      2.5.4
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -604,6 +604,10 @@
 			this.zipName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].zipName}.zip`;
 			this.fileName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].fileName}.{ext}`;
 			this.dateFormat = setting.dateFormat;
+			this.zipfmt = ``;
+			this.zipImgIndex0 = 0;
+			this.filefmt = ``;
+			this.fileImgIndex0 = 0;
 			this.d = window.getDigits(Number($($(event.target).closest('div.content-block').find('div.image-thumbnails')[0]).find('img').length));
 			return this;
 		}
@@ -646,7 +650,7 @@
 			return this;
 		}
 
-		paramsParser(fmt, d) {
+		paramsParser(type, fmt) {
 			let o = {
 				user: () => {
 					return $("h1.fanclub-name>a").text();
@@ -689,16 +693,13 @@
 
 			let s = (/\{imgIndex(\:(\d+))?\}/g.test(fmt)) ? RegExp.$2 : 0;
 			if (/\{imgIndex(\:(\d+))?\}/g.test(fmt)) fmt = fmt.replace(RegExp.$1, ``);
+			this[`${type}fmt`] = fmt;
+			this[`${type}ImgIndex0`] = s;
+			return this;
+		}
 
-			function* index(fmt, s) {
-				let index = Number(s - 1) || 0;
-				while (index < index + 1) {
-					index++;
-					yield fmt.replace(`{imgIndex}`, (index).toString().padStart(this.d, 0)).replace(`{ext}`, this.mimeType.toString().split(`/`)[1]);
-				}
-			}
-
-			return index.call(this, fmt, s);
+		nextName(type, index, mimeType) {
+			return this[`${type}fmt`].replace(`{imgIndex}`, (Number(index) + Number(this[`${type}ImgIndex0`])).toString().padStart(this.d, 0)).replace(`{ext}`, mimeType.toString().split(`/`)[1]);
 		}
 	}
 
@@ -727,8 +728,8 @@
 
 			var zip = (downloadB.type == `zip`) ? new JSZip() : undefined;
 			srcArr.digits = window.getDigits(Number(srcArr.length));
-			let zipName = downloadB.paramsParser(downloadB.zipName, srcArr.digits);
-			let fileName = downloadB.paramsParser(downloadB.fileName, srcArr.digits);
+			downloadB.paramsParser(`zip`, downloadB.zipName);
+			downloadB.paramsParser(`file`, downloadB.fileName);
 			srcArr.forEach((url, i) => {
 				$.get(url, function (data) {
 					let match = data.match(new RegExp(`<img src="(https://cc.fantia.jp/uploads/post_content_photo/file/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])"`, `g`));
@@ -739,17 +740,16 @@
 						downloadB.changeButton(`log`, `${dataCont} / ${srcArr.length}`);
 						downloadB.mimeType = mimeType;
 						if (zip == undefined) {
-							console.log(dataCont, srcArr.length)
 							if (dataCont == srcArr.length) downloadB.changeButton('end');
 							let tag = document.createElement('a');
 							let content = new Blob( [ imgData ], { type: mimeType } );	
 							tag.href = (URL || webkitURL).createObjectURL(content);
-							tag.download = fileName.next().value;
+							tag.download = downloadB.nextName('file', i, mimeType);
 							document.body.appendChild(tag);
 							tag.click();
 							document.body.removeChild(tag);
 						} else {
-							zip.file(fileName.next().value, imgData);
+							zip.file(downloadB.nextName('file', i, mimeType), imgData);
 							if (dataCont == srcArr.length) {
 								downloadB.changeButton(`pickUp`);
 								zip.generateAsync({
@@ -761,7 +761,7 @@
 									downloadB.changeButton('end');
 									let tag = document.createElement('a');
 									tag.href = (URL || webkitURL).createObjectURL(content);
-									tag.download = zipName.next().value;
+									tag.download = downloadB.nextName('zip', 0, mimeType);
 									document.body.appendChild(tag);
 									tag.click();
 									document.body.removeChild(tag);
