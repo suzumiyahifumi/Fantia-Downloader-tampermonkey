@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.6
+// @version      2.7
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -22,7 +22,7 @@
 
 	Date.prototype.Format = function (fmt) {
 		let o = {
-			"M+": this.getMonth() + 1, 
+			"M+": this.getMonth() + 1,
 			"d+": this.getDate(),
 			"h+": this.getHours(),
 			"m+": this.getMinutes(),
@@ -173,21 +173,6 @@
 
 	$('nav.scroll-tabs>div').append(`<a id="set" class="tab-item tab-item-text" style="cursor: pointer;" onclick="JAVASCRIPT:getDownLoadButton()">擷取下載</a>`);
 
-	window.getDownLoadButton = () => {
-		$("div.post-content-inner").each((i, div) => {
-			$(div).addClass("boxIndex").attr("boxIndex", i);
-		});
-		$('div.btn-group-tabs').each((i, div) => {
-			$(div).append(`<button class="btn btn-default btn-md downloadButton zip" onclick="getImg(event)"><i class="fa fa-file-archive-o fa-2x" style="color: #f9a63b  !important;"></i> <span class="btn-text-sub downloadSpanZip" style="color: #f9a63b  !important;">${setting.getDefault('downloadImgZip')}</span></button><button class="btn btn-default btn-md downloadButton file" onclick="getImg(event)"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${setting.getDefault('downloadImg')}</span></button>`);
-			$('#set').remove();
-		});
-		$("div#page").append(`<div id="settingCenter" onclick="openSettingCenter()"></div>`);
-		$("div#page").append(setting.settingCenterTemplate());
-		setting.renderSettingParams();
-		setting.paramsTemplate();
-		return;
-	};
-
 	let init = setInterval(() => {
 		if ($('nav.post-next-prev-buttons').length != 0) {
 			$(`div.image-thumbnails`).each((i, div) => {
@@ -203,13 +188,18 @@
 				clearInterval(init);
 			}
 		} else if ($(`module-post-content`).length != 0) {
-			$(`div.image-thumbnails`).each((i, div) => {
-				let b = $(div).closest('div.content-block').find(`div[ng-if='$ctrl.isVisibleAndMulti()']`);
-				if (b.length == 0) $(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
-			});
-			window.setting = new Setting();
-			window.getDownLoadButton();
-			clearInterval(init);
+			if ($(`div.post-content-inner`).length != 0) {
+				$(`div.image-thumbnails`).each((i, div) => {
+					let b = $(div).closest('div.content-block').find(`div[ng-if='$ctrl.isVisibleAndMulti()']`);
+					if (b.length == 0) $(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
+				});
+				window.setting = new Setting();
+				window.getDownLoadButton();
+				clearInterval(init);
+			} else {
+				$('#set').remove();
+				clearInterval(init);
+			}
 		}
 	}, 500);
 
@@ -474,14 +464,14 @@
 			$(`#fileNameInput`).val(this[(this.authorSaveCheck == `On`) ? `authorSave` : `generalSave`].fileName);
 			$(`#dateFormatInput`).val(this.dateFormat);
 			$(`#paramsTable`).html(this.paramsTemplate(this.lang));
-			return;
+			return this;
 		}
 
 		changeStyle(mode) {
 			let blur = CSS.supports(`backdrop-filter`, `blur(15px)`);
-			switch(mode){
+			switch (mode) {
 				case `Blur`:
-				
+
 					return;
 				case `unBlur`:
 					return;
@@ -625,21 +615,24 @@
 		}
 	}
 
-	class downloadButton {
+	class downloader {
 		constructor(event) {
 			this.pageType = setting.pageType;
 			this.metaData = setting.metaData;
 			this.button = ($(event.target).is("button")) ? $(event.target) : $(event.target).closest("button");
-			this.type = (this.button.hasClass(`zip`))? `zip` : `file`;
-			this.boxIndex = $(event.target).closest(".boxIndex").attr("boxIndex");
+			this.postContent = $(event.target).closest(".boxIndex");
+			this.type = (this.button.hasClass(`zip`)) ? `zip` : `file`;
+			this.boxIndex = this.postContent.attr("boxIndex");
+
 			let content = this.metaData.content[this.boxIndex];
+			this.metaData.srcArr = content.post_content_photos.map(img => img.url.original);
 			this.metaData.fee = content.plan.price;
 			this.metaData.plan = content.plan.name;
 			this.metaData.postDate = content.parent_post.date;
 			this.metaData.postId = content.parent_post.url.split("/").pop();
 			this.metaData.postTitle = content.parent_post.title;
 			this.metaData.title = content.title;
-			this.metaData.d = getDigits(Number(content.post_content_photos_micro.length));
+			this.metaData.d = downloader.getDigits(Number(content.post_content_photos_micro.length));
 
 			this.zipName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].zipName}.zip`;
 			this.fileName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].fileName}.{ext}`;
@@ -649,7 +642,9 @@
 			this.filefmt = ``;
 			this.fileImgIndex0 = 0;
 			this.d = this.metaData.d;
-			return this;
+
+			this.zip = (this.type == `zip`) ? new JSZip() : undefined;
+			return this.downloadImg();
 		}
 
 		changeButton(mode, input = false) {
@@ -657,7 +652,7 @@
 			switch (mode) {
 				case `start`:
 					button.addClass(['active', 'hdr']);
-					if(this.type == `file`){
+					if (this.type == `file`) {
 						button.find('i').removeClass('fa-download').addClass(['fa-spinner', 'fa-pulse']);
 					} else {
 						button.find('i').removeClass('fa-file-archive-o').addClass(['fa-spinner', 'fa-pulse']);
@@ -741,7 +736,95 @@
 		nextName(type, index, mimeType) {
 			return this[`${type}fmt`].replace(`{imgIndex}`, (Number(index) + Number(this[`${type}ImgIndex0`])).toString().padStart(this.d, 0)).replace(`{ext}`, mimeType.toString().split(`/`)[1]);
 		}
+
+		downloadImg() {
+			let dataCont = 0;
+			this.paramsParser(`zip`, this.zipName);
+			this.paramsParser(`file`, this.fileName);
+			this.changeButton(`start`);
+			this.changeButton(`catchLink`);
+			this.changeButton(`log`, `${dataCont} / ${this.metaData.srcArr.length}`);
+			let self = this;
+			this.metaData.srcArr.forEach((url, i) => {
+				downloader.loadAsArrayBuffer(url, function (imgData, mimeType) {
+					dataCont += 1;
+					self.changeButton(`log`, `${dataCont} / ${self.metaData.srcArr.length}`);
+					self.mimeType = mimeType;
+					if (self.zip == undefined) {
+						if (dataCont == self.metaData.srcArr.length) self.changeButton('end');
+						let content = new Blob([imgData], {
+							type: mimeType
+						});
+						downloader.download(content, self.nextName('file', i, mimeType));
+						return;
+					} else {
+						self.zip.file(self.nextName('file', i, mimeType), imgData);
+						if (dataCont == self.metaData.srcArr.length) {
+							self.changeButton(`pickUp`);
+							self.zip.generateAsync({
+									type: "blob"
+								},
+								function updateCallback(metadata) {
+									self.changeButton(`log`, `${setting.getDefault(`processing`)}：${metadata.percent.toFixed(2)} %`);
+								}).then(function (content) {
+								self.changeButton('end');
+								downloader.download(content, self.nextName('zip', 0, mimeType));
+								return;
+							});
+						}
+					}
+				});
+			});
+		}
+
+		static download(content, name) {
+			let tag = document.createElement('a');
+			tag.href = (URL || webkitURL).createObjectURL(content);
+			tag.download = name;
+			document.body.appendChild(tag);
+			tag.click();
+			document.body.removeChild(tag);
+			return;
+		}
+
+		static getDigits(i) {
+			let L = 0;
+			while (i >= 1) {
+				i = i / 10;
+				L += 1;
+			}
+			return `${L}`;
+		}
+
+		static loadAsArrayBuffer(url, callback) {
+			let xhr = new XMLHttpRequest();
+			xhr.open("GET", url);
+			xhr.responseType = "arraybuffer";
+			xhr.onerror = function (error) {
+				return new Error(`ERROR`);
+			};
+			xhr.onload = function () {
+				if (xhr.status === 200) {
+					callback(xhr.response, xhr.getResponseHeader("Content-Type"));
+				} else {
+					return new Error(`ERROR`);
+				}
+			};
+			xhr.send();
+		}
 	}
+
+	window.getDownLoadButton = () => {
+		$("div.post-content-inner").each((i, div) => {
+			$(div).addClass("boxIndex").attr("boxIndex", i);
+			$(div).find("div.btn-group-tabs").append(`<button class="btn btn-default btn-md downloadButton zip" onclick="getImg(event)"><i class="fa fa-file-archive-o fa-2x" style="color: #f9a63b  !important;"></i> <span class="btn-text-sub downloadSpanZip" style="color: #f9a63b  !important;">${setting.getDefault('downloadImgZip')}</span></button><button class="btn btn-default btn-md downloadButton file" onclick="getImg(event)"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${setting.getDefault('downloadImg')}</span></button>`);
+		});
+		$('#set').remove();
+		$("div#page").append(`<div id="settingCenter" onclick="openSettingCenter()"></div>`);
+		$("div#page").append(setting.settingCenterTemplate());
+		setting.renderSettingParams().paramsTemplate();
+		return;
+	};
 
 	window.openSettingCenter = () => {
 		if ($(`#settingCenterDiv`).hasClass(`close`)) {
@@ -752,110 +835,25 @@
 
 	window.getImg = (event) => {
 		return checkBrowser(event, (event) => {
-			let srcArr = [];
-			let dataCont = 0;
-			const downloadB = new downloadButton(event);
-			downloadB.changeButton(`start`);
-			downloadB.changeButton(`catchLink`);
-			$($(event.target).closest('div.content-block').find('div.image-thumbnails')[0]).find('img').each((i, img) => {
-				let src = $(img).attr('src');
-				let id = /file\/\d+\//g.exec(src);
-				if (id[0] != null) {
-					srcArr.push(`https://fantia.jp/posts/SRC/post_content_photo/SRC`.replaceAll(`SRC`, /\d+/.exec(id)[0]));
-				}
-			});
-			downloadB.changeButton(`log`, `${dataCont} / ${srcArr.length}`);
-
-			var zip = (downloadB.type == `zip`) ? new JSZip() : undefined;
-			srcArr.digits = window.getDigits(Number(srcArr.length));
-			downloadB.paramsParser(`zip`, downloadB.zipName);
-			downloadB.paramsParser(`file`, downloadB.fileName);
-			srcArr.forEach((url, i) => {
-				$.get(url, function (data) {
-					let match = data.match(new RegExp(`<img src="(https://cc.fantia.jp/uploads/post_content_photo/file/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])"`, `g`));
-					if(match == null) return false;
-                    let imgSRC = decodeURI(RegExp.$1.replace(/amp;/g, ``));
-					loadAsArrayBuffer(imgSRC, function (imgData, mimeType) {
-						dataCont += 1;
-						downloadB.changeButton(`log`, `${dataCont} / ${srcArr.length}`);
-						downloadB.mimeType = mimeType;
-						if (zip == undefined) {
-							if (dataCont == srcArr.length) downloadB.changeButton('end');
-							let tag = document.createElement('a');
-							let content = new Blob( [ imgData ], { type: mimeType } );	
-							tag.href = (URL || webkitURL).createObjectURL(content);
-							tag.download = downloadB.nextName('file', i, mimeType);
-							document.body.appendChild(tag);
-							tag.click();
-							document.body.removeChild(tag);
-						} else {
-							zip.file(downloadB.nextName('file', i, mimeType), imgData);
-							if (dataCont == srcArr.length) {
-								downloadB.changeButton(`pickUp`);
-								zip.generateAsync({
-										type: "blob"
-									},
-									function updateCallback(metadata) {
-										downloadB.changeButton(`log`, `${setting.getDefault(`processing`)}：${metadata.percent.toFixed(2)} %`);
-									}).then(function (content) {
-									downloadB.changeButton('end');
-									let tag = document.createElement('a');
-									tag.href = (URL || webkitURL).createObjectURL(content);
-									tag.download = downloadB.nextName('zip', 0, mimeType);
-									document.body.appendChild(tag);
-									tag.click();
-									document.body.removeChild(tag);
-								});
-							}
-						}
-					});
-				});
-
-			});
-			return;
+			return new downloader(event);
 		});
 	};
 
-	window.getDigits = (i) => {
-		let L = 0;
-		while (i >= 1) {
-			i = i / 10;
-			L += 1;
-		}
-		return `${L}`;
-	};
-
-	window.loadAsArrayBuffer = (url, callback) => {
-		let xhr = new XMLHttpRequest();
-		xhr.open("GET", url);
-		xhr.responseType = "arraybuffer";
-		xhr.onerror = function (error) {
-			return new Error(`ERROR`);
-		};
-		xhr.onload = function () {
-			if (xhr.status === 200) {
-				callback(xhr.response, xhr.getResponseHeader("Content-Type"));
-			} else {
-				return new Error(`ERROR`);
-			}
-		};
-		xhr.send();
-	};
-
 	window.checkBrowser = (event, callBack) => {
-		try{
+		try {
 			let excludes = [];
-			let ex = excludes.map(b => navigator.userAgent.indexOf(b)).filter(b => (b!=-1)?true: false);
+			let ex = excludes.map(b => navigator.userAgent.indexOf(b)).filter(b => (b != -1) ? true : false);
 			if (ex.length >= 1) {
-				alert(`請使用 Firefox 下載圖片！\nPlease run this script on Firefox!`);
+				alert(`請使用 Firefox 下載圖片！\nPlease run this script on Firefox!\n
+				Also you can check the new script version!`);
 				return;
 			} else {
 				return callBack(event);
 			}
-		}
-		catch(err){
+		} catch (err) {
 			console.log(err);
-			alert(`出了些問題！你可以嘗試使用 Firefox 下載圖片！\nThere are some ERROR, You can try this script on Firefox!`);
+			alert(`出了些問題！你可以嘗試使用 Firefox 下載圖片！\nThere are some ERROR, You can try this script on Firefox!\n
+				Also you can check the new script version!`);
 			return;
 		}
 	};
