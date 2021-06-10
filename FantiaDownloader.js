@@ -4,12 +4,13 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.5.4
+// @version      2.6
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
 // @author       suzumiyahifumi
-// @match        https://fantia.jp/posts/*
+// @include        https://fantia.jp/posts/*
+// @include        https://fantia.jp/fanclubs/*/backnumbers?*
 // @icon         https://www.google.com/s2/favicons?domain=fantia.jp
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js
@@ -173,6 +174,9 @@
 	$('nav.scroll-tabs>div').append(`<a id="set" class="tab-item tab-item-text" style="cursor: pointer;" onclick="JAVASCRIPT:getDownLoadButton()">擷取下載</a>`);
 
 	window.getDownLoadButton = () => {
+		$("div.post-content-inner").each((i, div) => {
+			$(div).addClass("boxIndex").attr("boxIndex", i);
+		});
 		$('div.btn-group-tabs').each((i, div) => {
 			$(div).append(`<button class="btn btn-default btn-md downloadButton zip" onclick="getImg(event)"><i class="fa fa-file-archive-o fa-2x" style="color: #f9a63b  !important;"></i> <span class="btn-text-sub downloadSpanZip" style="color: #f9a63b  !important;">${setting.getDefault('downloadImgZip')}</span></button><button class="btn btn-default btn-md downloadButton file" onclick="getImg(event)"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${setting.getDefault('downloadImg')}</span></button>`);
 			$('#set').remove();
@@ -198,11 +202,23 @@
 				$('#set').remove();
 				clearInterval(init);
 			}
+		} else if ($(`module-post-content`).length != 0) {
+			$(`div.image-thumbnails`).each((i, div) => {
+				let b = $(div).closest('div.content-block').find(`div[ng-if='$ctrl.isVisibleAndMulti()']`);
+				if (b.length == 0) $(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
+			});
+			window.setting = new Setting();
+			window.getDownLoadButton();
+			clearInterval(init);
 		}
 	}, 500);
 
 	class Setting {
 		constructor() {
+
+			this.pageType = (window.location.href.match(/https:\/\/fantia\.jp\/posts\/*/g) != null) ? `post` : `backnumber`;
+			let qs = new URLSearchParams(window.location.search);
+			this.jsonUrl = `https://fantia.jp/api/v1/${(this.pageType == `post`)? `posts/${window.location.href.split("/").pop()}`: `fanclub/backnumbers/monthly_contents/plan/${qs.get("plan")}/month/${qs.get("month")}`}`;
 
 			let authorId = $("h1.fanclub-name>a").attr(`href`).split("/").pop();
 
@@ -240,6 +256,19 @@
 					});
 				}
 			}
+
+			this.metaJson = {};
+			this.metaData = {};
+			let self = this;
+			$.get(this.jsonUrl, (json) => {
+				self.metaJson = json;
+				let data = json[self.pageType];
+				self.metaData = {
+					user: data.fanclub.user.name,
+					uid: data.fanclub.id,
+					content: data[`${self.pageType}_contents`]
+				};
+			});
 			return this;
 		}
 
@@ -251,8 +280,6 @@
 					cookieSave: this.cookie.cookieSave,
 					lang: this.cookie.lang,
 					dateFormat: this.cookie.dateFormat,
-					domain: `https://fantia.jp`,
-					path: `/`,
 					Expires: date.toUTCString()
 				};
 				cookie.generalSaveZIP = this.cookie.generalSave.zipName;
@@ -278,8 +305,9 @@
 
 		updateCookie(cookie = undefined) {
 			let Expires = cookie.Expires;
+			delete cookie.Expires;
 			for (let [key, value] of Object.entries(cookie)) {
-				document.cookie = `${key}=${value}; Expires=${Expires}`;
+				document.cookie = `${key}=${value}; Expires=${Expires}; Path=/`;
 			}
 			this.cookieOri = document.cookie;
 			return this.cookieOri;
@@ -599,8 +627,20 @@
 
 	class downloadButton {
 		constructor(event) {
+			this.pageType = setting.pageType;
+			this.metaData = setting.metaData;
 			this.button = ($(event.target).is("button")) ? $(event.target) : $(event.target).closest("button");
 			this.type = (this.button.hasClass(`zip`))? `zip` : `file`;
+			this.boxIndex = $(event.target).closest(".boxIndex").attr("boxIndex");
+			let content = this.metaData.content[this.boxIndex];
+			this.metaData.fee = content.plan.price;
+			this.metaData.plan = content.plan.name;
+			this.metaData.postDate = content.parent_post.date;
+			this.metaData.postId = content.parent_post.url.split("/").pop();
+			this.metaData.postTitle = content.parent_post.title;
+			this.metaData.title = content.title;
+			this.metaData.d = getDigits(Number(content.post_content_photos_micro.length));
+
 			this.zipName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].zipName}.zip`;
 			this.fileName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].fileName}.{ext}`;
 			this.dateFormat = setting.dateFormat;
@@ -608,7 +648,7 @@
 			this.zipImgIndex0 = 0;
 			this.filefmt = ``;
 			this.fileImgIndex0 = 0;
-			this.d = window.getDigits(Number($($(event.target).closest('div.content-block').find('div.image-thumbnails')[0]).find('img').length));
+			this.d = this.metaData.d;
 			return this;
 		}
 
@@ -653,34 +693,34 @@
 		paramsParser(type, fmt) {
 			let o = {
 				user: () => {
-					return $("h1.fanclub-name>a").text();
+					return this.metaData.user || $("h1.fanclub-name>a").text();
 				},
 				uid: () => {
-					return this.authorId;
+					return this.metaData.uid || this.authorId;
 				},
 				postTitle: () => {
-					return $("h1.post-title").text();
+					return this.metaData.postTitle || $("h1.post-title").text();
 				},
 				postId: () => {
-					return window.location.href.split("/").pop();
+					return this.metaData.postId || window.location.href.split("/").pop();
 				},
 				boxTitle: () => {
-					return this.button.closest("div.post-content-inner").find('h2').text();
+					return this.metaData.boxTitle || this.button.closest("div.post-content-inner").find('h2').text();
 				},
 				plan: () => {
-					let feeStr = this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
-					let match = feeStr.match(new RegExp(/（\d+円）以上限定$/g));
-					if (match != null) return feeStr.replace(match[0], ``);
-					return ``;
+					let feeStr = this.metaData.plan || this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
+					let match = this.metaData.plan || feeStr.match(new RegExp(/（\d+円）以上限定$/g));
+					if (match != null) return this.metaData.plan || feeStr.replace(match[0], ``);
+					return this.metaData.plan || ``;
 				},
 				fee: () => {
-					let feeStr = this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
-					let match = feeStr.match(new RegExp(/（(\d+)円）以上限定$/g));
-					if(match != null) return RegExp.$1;
-					return ``;
+					let feeStr = this.metaData.fee || this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
+					let match = this.metaData.fee || feeStr.match(new RegExp(/（(\d+)円）以上限定$/g));
+					if (match != null) return this.metaData.fee || RegExp.$1;
+					return this.metaData.fee || ``;
 				},
 				postDate: () => {
-					return new Date($(`small.post-date>span`).text()).Format(this.dateFormat);
+					return new Date(this.metaData.postDate || $(`small.post-date>span`).text()).Format(this.dateFormat);
 				},
 				taskDate: () => {
 					return new Date().Format(this.dateFormat);

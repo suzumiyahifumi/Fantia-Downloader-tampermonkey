@@ -1,13 +1,13 @@
 {  
   "name": "Fantia downloader",  
-  "version": "2.5.3",  
+  "version": "2.6",  
   "description": "Download your Fantia rewards more easily! ",
   "manifest_version": 3,
   "author": "suzumiyahifumi",
   "icons": { "64": "icon_64.png" },
   "content_scripts" : [
     {  
-        "matches" : ["https://fantia.jp/posts/*"],  
+        "matches" : ["https://fantia.jp/posts/*", "https://fantia.jp/fanclubs/*/backnumbers*"],  
         "js" : ["inject.js"]
     }  
    ],
