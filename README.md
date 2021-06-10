@@ -6,10 +6,8 @@ new functionality: Rename the download file!
 
 * 可以取得瀏覽器擴充版本（You can get extension version for Firefox and Chrome）：
   1. Firefox：[Fantia downloader Firefox ver2.5.4](https://addons.mozilla.org/zh-TW/firefox/addon/fantia-downloader/)
-  2. Chrome： [Fantia downloader Chrome ver2.5.3](https://chrome.google.com/webstore/detail/fantia-downloader/cfkejojncmolgahkabegcdbcbmnghhcp?hl=zh-TW&authuser=0) <br>
-  * Chrome version is 2.5.3 now, There is a bug about "{imgIndex}" <br>
-  The {imgIndex} is not correct index. (It has be repaired in ver 2.5.4)<br>
-  The Chrome version 2.5.4 will update in the near future. Chrome extension audit is too slow :(
+  2. Chrome： [Fantia downloader Chrome ver2.5.4](https://chrome.google.com/webstore/detail/fantia-downloader/cfkejojncmolgahkabegcdbcbmnghhcp?hl=zh-TW&authuser=0) <br>
+  * Chrome version is 2.5.4 now, Please update to latest version, if you are using 2.5.0 or 2.5.3 in Chrome.<br>
 
 #### NEW Version v2.5
 * 支援 Firefox、Google Chrome、Edge ／ Support Firefox, Google Chrome, Edge.<br>
