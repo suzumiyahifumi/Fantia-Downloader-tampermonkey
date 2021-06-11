@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.7.1
+// @version      2.7.2
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -207,7 +207,7 @@
 		constructor() {
 
 			this.pageType = (window.location.href.match(/https:\/\/fantia\.jp\/posts\/*/g) != null) ? `post` : `backnumber`;
-			let qs = new URLSearchParams((window.location.search == ``) ? $(`div.text-center>a.active`).attr("href").split("?")[1] : window.location.search);
+			let qs = new URLSearchParams((this.pageType == `post`) ? `` : (window.location.search == ``) ? $(`div.text-center>a.active`).attr("href").split("?")[1] : window.location.search);
 			this.jsonUrl = `https://fantia.jp/api/v1/${(this.pageType == `post`)? `posts/${window.location.href.split("/").pop()}`: `fanclub/backnumbers/monthly_contents/plan/${qs.get("plan")}/month/${qs.get("month")}`}`;
 
 			let authorId = $("h1.fanclub-name>a").attr(`href`).split("/").pop();
