@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.7.2
+// @version      2.7.3
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -171,7 +171,7 @@
 
     </style>`);
 
-	$('nav.scroll-tabs>div').append(`<a id="set" class="tab-item tab-item-text" style="cursor: pointer;" onclick="JAVASCRIPT:getDownLoadButton()">擷取下載</a>`);
+	$('nav.scroll-tabs>div').append(`<a id="set" class="tab-item tab-item-text set-FD" style="cursor: pointer;" onclick="JAVASCRIPT:getDownLoadButton()">擷取下載</a>`);
 
 	let init = setInterval(() => {
 		if ($('nav.post-next-prev-buttons').length != 0) {
@@ -184,7 +184,7 @@
 				window.getDownLoadButton();
 				clearInterval(init);
 			} else {
-				$('#set').remove();
+				$('.set-FD').remove();
 				clearInterval(init);
 			}
 		} else if ($(`module-post-content`).length != 0) {
@@ -197,7 +197,7 @@
 				window.getDownLoadButton();
 				clearInterval(init);
 			} else {
-				$('#set').remove();
+				$('.set-FD').remove();
 				clearInterval(init);
 			}
 		}
@@ -819,7 +819,7 @@
 			$(div).addClass("boxIndex").attr("boxIndex", i);
 			$(div).find("div.btn-group-tabs").append(`<button class="btn btn-default btn-md downloadButton zip" onclick="getImg(event)"><i class="fa fa-file-archive-o fa-2x" style="color: #f9a63b  !important;"></i> <span class="btn-text-sub downloadSpanZip" style="color: #f9a63b  !important;">${setting.getDefault('downloadImgZip')}</span></button><button class="btn btn-default btn-md downloadButton file" onclick="getImg(event)"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${setting.getDefault('downloadImg')}</span></button>`);
 		});
-		$('#set').remove();
+		$('.set-FD').remove();
 		$("div#page").append(`<div id="settingCenter" onclick="openSettingCenter()"></div>`);
 		$("div#page").append(setting.settingCenterTemplate());
 		setting.renderSettingParams().paramsTemplate();
