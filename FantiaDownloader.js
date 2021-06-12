@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.7.3
+// @version      2.7.4
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -174,32 +174,14 @@
 	$('nav.scroll-tabs>div').append(`<a id="set" class="tab-item tab-item-text set-FD" style="cursor: pointer;" onclick="JAVASCRIPT:getDownLoadButton()">擷取下載</a>`);
 
 	let init = setInterval(() => {
-		if ($('nav.post-next-prev-buttons').length != 0) {
+		if ($(`div[id^='post-content-id-']`).length != 0) {
 			$(`div.image-thumbnails`).each((i, div) => {
 				let b = $(div).closest('div.content-block').find(`div[ng-if='$ctrl.isVisibleAndMulti()']`);
 				if (b.length == 0) $(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
 			});
-			if ($('div.btn-group-tabs').length != 0) {
-				window.setting = new Setting();
-				window.getDownLoadButton();
-				clearInterval(init);
-			} else {
-				$('.set-FD').remove();
-				clearInterval(init);
-			}
-		} else if ($(`module-post-content`).length != 0) {
-			if ($(`div.post-content-inner`).length != 0) {
-				$(`div.image-thumbnails`).each((i, div) => {
-					let b = $(div).closest('div.content-block').find(`div[ng-if='$ctrl.isVisibleAndMulti()']`);
-					if (b.length == 0) $(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
-				});
-				window.setting = new Setting();
-				window.getDownLoadButton();
-				clearInterval(init);
-			} else {
-				$('.set-FD').remove();
-				clearInterval(init);
-			}
+			window.setting = new Setting();
+			window.getDownLoadButton();
+			clearInterval(init);
 		}
 	}, 500);
 
