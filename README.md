@@ -6,10 +6,9 @@ new functionality: Rename the download file!
 
 * 可以取得瀏覽器擴充版本（You can get extension version for Firefox and Chrome）：
   1. Firefox：[Fantia downloader Firefox (ver2.7.4)](https://addons.mozilla.org/zh-TW/firefox/addon/fantia-downloader/)
-  2. Chrome： [Fantia downloader Chrome (ver2.7.3)](https://chrome.google.com/webstore/detail/fantia-downloader/cfkejojncmolgahkabegcdbcbmnghhcp?hl=zh-TW&authuser=0) <br>
+  2. Chrome： [Fantia downloader Chrome (ver2.7.4)](https://chrome.google.com/webstore/detail/fantia-downloader/cfkejojncmolgahkabegcdbcbmnghhcp?hl=zh-TW&authuser=0) <br>
   * Use userscript version can get the fastest update and debug!
-  * Chrome version is 2.7.3 now, Please update to latest version, if you are using 2.5.0 or 2.5.3.<br>
-  * Version 2.7.4 for Chrome will be come soon.<br>
+  * Chrome and Firefox version is 2.7.4 now, Please update to latest version, if you are using 2.5.0 or 2.5.3.<br>
 
 #### NEW Version v2.7
 * 支援 Firefox、Google Chrome、Edge ／ Support Firefox, Google Chrome, Edge.<br>
