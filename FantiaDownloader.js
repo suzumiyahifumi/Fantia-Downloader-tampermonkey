@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.7.4
+// @version      2.7.5
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -462,8 +462,8 @@
 			}
 		}
 
-		changeLang() {
-			let lang = $("#selectSetting option:selected").val();
+		changeLang(Lang) {
+			let lang = Lang || $("#selectSetting option:selected").val();
 			this.setCookie({
 				lang: lang
 			});
@@ -607,14 +607,15 @@
 			this.boxIndex = this.postContent.attr("boxIndex");
 
 			let content = this.metaData.content[this.boxIndex];
+			let p = (content.plan == null) ? `一般公開` : undefined;
 			this.metaData.srcArr = content.post_content_photos.map(img => img.url.original);
-			this.metaData.fee = content.plan.price;
-			this.metaData.plan = content.plan.name;
+			this.metaData.fee = p || content.plan.price;
+			this.metaData.plan = p || content.plan.name;
 			this.metaData.postDate = content.parent_post.date;
 			this.metaData.postId = content.parent_post.url.split("/").pop();
 			this.metaData.postTitle = content.parent_post.title;
 			this.metaData.title = content.title;
-			this.metaData.d = downloader.getDigits(Number(content.post_content_photos_micro.length));
+			this.metaData.d = downloader.getDigits(Number(content.post_content_photos.length));
 
 			this.zipName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].zipName}.zip`;
 			this.fileName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].fileName}.{ext}`;
@@ -688,13 +689,13 @@
 					let feeStr = this.metaData.plan || this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
 					let match = this.metaData.plan || feeStr.match(new RegExp(/（\d+円）以上限定$/g));
 					if (match != null) return this.metaData.plan || feeStr.replace(match[0], ``);
-					return this.metaData.plan || ``;
+					return this.metaData.plan || `一般公開`;
 				},
 				fee: () => {
 					let feeStr = this.metaData.fee || this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
 					let match = this.metaData.fee || feeStr.match(new RegExp(/（(\d+)円）以上限定$/g));
 					if (match != null) return this.metaData.fee || RegExp.$1;
-					return this.metaData.fee || ``;
+					return this.metaData.fee || `一般公開`;
 				},
 				postDate: () => {
 					return new Date(this.metaData.postDate || $(`small.post-date>span`).text()).Format(this.dateFormat);
