@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.7.5
+// @version      2.7.6
 // @description  Download your Fantia rewards more easily! 
 // @description:en  Download your Fantia rewards more easily! 
 // @description:ja  Download your Fantia rewards more easily! 
@@ -369,7 +369,7 @@
 				ja: {
 					downloadImg: `ダウンロード`,
 					downloadImgZip: `ZIPダウンロード`,
-					retrieving: `擷取連結中`,
+					retrieving: `取得中`,
 					zipping: `zip圧縮`,
 					processing: `圧縮`,
 					done: `ダウンロード完了`,
@@ -381,12 +381,12 @@
 					authorSave: `クリエイターに保存`,
 					zipName: `ZIPフォルダ`,
 					fileName: `ファイル`,
-					dateFormat: `日期時間格式`,
+					dateFormat: `日時の設定`,
 					saveSetting: `設定を保存する`,
-					closeSetting: `閉める`,
+					closeSetting: `閉じる`,
 					tableParams: `パラメータ`,
-					tableMean: `效果`,
-					saveMessage: `設定が保存しだ！`,
+					tableMean: `効果`,
+					saveMessage: `設定を保存しました！`,
 					// 參數
 					user: `クリエイターの名前`,
 					uid: `クリエイターのID`,
@@ -394,10 +394,10 @@
 					postId: `投稿のID`,
 					boxTitle: `イラストボックスのタイトル`,
 					"imgIndex:0": `画像のインデックス、番号は最初のインデックス番号です`,
-					plan: `プランの名`,
-					fee: `プランの月料`,
-					postDate: `リリース時間`,
-					taskDate: `ダウンロード時間`,
+					plan: `プラン名`,
+					fee: `プランの月額料金`,
+					postDate: `公開日時`,
+					taskDate: `ダウンロード日時`,
 					ext: `拡張子`
 				},
 				zh: {
