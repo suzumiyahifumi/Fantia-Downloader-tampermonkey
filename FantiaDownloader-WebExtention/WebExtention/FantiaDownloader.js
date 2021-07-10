@@ -729,7 +729,7 @@
 			this.changeButton(`log`, `${dataCont} / ${this.metaData.srcArr.length}`);
 			let self = this;
 			this.metaData.srcArr.forEach((url, i) => {
-				downloader.loadAsArrayBuffer(url, function (imgData, mimeType) {
+				downloader.loadAsArrayBuffer(url, function (imgData, mimeType, lastModified) {
 					dataCont += 1;
 					self.changeButton(`log`, `${dataCont} / ${self.metaData.srcArr.length}`);
 					self.mimeType = mimeType;
@@ -741,7 +741,9 @@
 						downloader.download(content, self.nextName('file', i, mimeType));
 						return;
 					} else {
-						self.zip.file(self.nextName('file', i, mimeType), imgData);
+						const sDate = lastModified && lastModified !== '' ? new Date(lastModified) : null
+						const date = sDate ? new Date(sDate.getTime() - sDate.getTimezoneOffset() * 60000) : new Date()
+						self.zip.file(self.nextName('file', i, mimeType), imgData, { date });
 						if (dataCont == self.metaData.srcArr.length) {
 							self.changeButton(`pickUp`);
 							self.zip.generateAsync({
@@ -788,7 +790,7 @@
 			};
 			xhr.onload = function () {
 				if (xhr.status === 200) {
-					callback(xhr.response, xhr.getResponseHeader("Content-Type"));
+					callback(xhr.response, xhr.getResponseHeader("Content-Type"), xhr.getResponseHeader("Last-Modified"));
 				} else {
 					return new Error(`ERROR`);
 				}
