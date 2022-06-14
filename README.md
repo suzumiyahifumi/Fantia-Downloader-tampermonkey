@@ -9,7 +9,8 @@ This script will add a download button to the Fanita Image Box for downloading w
   * Use userscript version can get the fastest update and debug!
   * Chrome and Firefox version is 2.7.7 now, Please update to latest version, if you are using 2.5.0 or 2.5.3.<br>
 
-#### NEW Version v2.7
+#### NEW Version v3.1
+* 支援 文章標題圖片、blog 圖片下載 ／ Support download image from post and blog area.
 * 支援 Firefox、Google Chrome、Edge ／ Support Firefox, Google Chrome, Edge.<br>
 * 支援 中文、English、日本語 ／ Support English, 日本語 and 中文.<br>
 * 支援 BackNumber分頁下載 ／ Support download in BackNumber pages<br>
