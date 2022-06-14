@@ -4,10 +4,10 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      2.7.7
-// @description  Download your Fantia rewards more easily! 
-// @description:en  Download your Fantia rewards more easily! 
-// @description:ja  Download your Fantia rewards more easily! 
+// @version      3.1.0
+// @description  Download your Fantia rewards more easily!
+// @description:en  Download your Fantia rewards more easily!
+// @description:ja  Download your Fantia rewards more easily!
 // @author       suzumiyahifumi
 // @include        https://fantia.jp/posts/*
 // @include        https://fantia.jp/fanclubs/*/backnumbers*
@@ -174,11 +174,15 @@
 	$('nav.scroll-tabs>div').append(`<a id="set" class="tab-item tab-item-text set-FD" style="cursor: pointer;" onclick="JAVASCRIPT:getDownLoadButton()">擷取下載</a>`);
 
 	let init = setInterval(() => {
-		if ($(`div[id^='post-content-id-']`).length != 0) {
+		if ($(`div[id^='post-content-id-']`).length != 0 && $(`.the-post`).length != 0) {
 			$(`div.image-thumbnails`).each((i, div) => {
 				let b = $(div).closest('div.content-block').find(`div[ng-if='$ctrl.isVisibleAndMulti()']`);
 				if (b.length == 0) $(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
 			});
+			$(`a.fantiaImage`).each((i, div) => {
+				$(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope blogBox" blog-img-index="${$(div).attr("data-id")}"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
+			});
+			$(`.the-post .post-thumbnail .img-default`).closest(`div.post-thumbnail`).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
 			window.setting = new Setting();
 			window.getDownLoadButton();
 			clearInterval(init);
@@ -228,6 +232,7 @@
 					});
 				}
 			}
+			this.saveCookie(false);
 
 			this.metaJson = {};
 			this.metaData = {};
@@ -244,7 +249,7 @@
 			return this;
 		}
 
-		saveCookie() {
+		saveCookie(check) {
 			if (this.cookie.cookieSave == 'On') {
 				let date = new Date();
 				date.setDate(date.getDate() + 75);
@@ -272,7 +277,7 @@
 				cookie[`authorId_${this.authorId}`] = 'Off';
 				this.updateCookie(cookie);
 			}
-			return alert(this.getDefault(`saveMessage`, this.lang));
+			return (check != false)? alert(this.getDefault(`saveMessage`, this.lang)) : true;
 		}
 
 		updateCookie(cookie = undefined) {
@@ -602,21 +607,39 @@
 			this.pageType = setting.pageType;
 			this.metaData = setting.metaData;
 			this.button = ($(event.target).is("button")) ? $(event.target) : $(event.target).closest("button");
+			this.boxType = this.button.attr("box-type");
 			this.postContent = $(event.target).closest(".boxIndex");
 			this.type = (this.button.hasClass(`zip`)) ? `zip` : `file`;
 			this.boxIndex = this.postContent.attr("boxIndex");
 
-			let content = this.metaData.content[this.boxIndex];
-			let p = (content.plan == null) ? `一般公開` : undefined;
-			this.metaData.srcArr = content.post_content_photos.map(img => img.url.original);
-			this.metaData.fee = p || content.plan.price;
-			this.metaData.plan = p || content.plan.name;
-			this.metaData.postDate = content.parent_post.date;
-			this.metaData.postId = content.parent_post.url.split("/").pop();
-			this.metaData.postTitle = content.parent_post.title;
-			this.metaData.title = content.title;
-			this.metaData.d = downloader.getDigits(Number(content.post_content_photos.length));
-
+			if (this.boxType == "box") {
+				let content = this.metaData.content[this.boxIndex];
+				let p = (content.plan == null) ? `一般公開` : undefined;
+				this.metaData.category = content.category;
+				this.metaData.indextype = (content.category == "blog") ? this.button.closest(".blogBox").attr("blog-img-index") : "photo_gallery";
+				this.metaData.srcArr = (content.category == "blog") ? [JSON.parse(content.comment).ops.filter(i => {
+					return (i.insert.fantiaImage && i.insert.fantiaImage.id == this.metaData.indextype) ? true : false
+				})[0].insert.fantiaImage.original_url] : content.post_content_photos.map(img => img.url.original);
+				this.metaData.fee = p || content.plan.price;
+				this.metaData.plan = p || content.plan.name;
+				this.metaData.postDate = content.parent_post.date;
+				this.metaData.postId = content.parent_post.url.split("/").pop();
+				this.metaData.postTitle = content.parent_post.title;
+				this.metaData.title = content.title;
+				this.metaData.d = (content.category == "photo_gallery") ? downloader.getDigits(Number(content.post_content_photos.length)) : 1;
+			} else if (this.boxType == "post") {
+				let p = `一般公開`;
+				this.metaData.category = "post";
+				this.metaData.indextype = "post";
+				this.metaData.srcArr = [setting.metaJson.post.thumb.original];
+				this.metaData.fee = p;
+				this.metaData.plan = p;
+				this.metaData.postDate = setting.metaJson.post.posted_at;
+				this.metaData.postId = setting.metaJson.post.uri.show.split("/").pop();
+				this.metaData.postTitle = setting.metaJson.post.title;
+				this.metaData.title = setting.metaJson.post.title;
+				this.metaData.d = 1;
+			}
 			this.zipName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].zipName}.zip`;
 			this.fileName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].fileName}.{ext}`;
 			this.dateFormat = setting.dateFormat;
@@ -717,6 +740,7 @@
 		}
 
 		nextName(type, index, mimeType) {
+			if (this.metaData.indextype != "photo_gallery") return this[`${type}fmt`].replace(`{imgIndex}`, (this.metaData.indextype).toString().padStart(this.d, 0)).replace(`{ext}`, mimeType.toString().split(`/`)[1]);
 			return this[`${type}fmt`].replace(`{imgIndex}`, (Number(index) + Number(this[`${type}ImgIndex0`])).toString().padStart(this.d, 0)).replace(`{ext}`, mimeType.toString().split(`/`)[1]);
 		}
 
@@ -743,7 +767,9 @@
 					} else {
 						const sDate = lastModified && lastModified !== '' ? new Date(lastModified) : null
 						const date = sDate ? new Date(sDate.getTime() - sDate.getTimezoneOffset() * 60000) : new Date()
-						self.zip.file(self.nextName('file', i, mimeType), imgData, { date });
+						self.zip.file(self.nextName('file', i, mimeType), imgData, {
+							date
+						});
 						if (dataCont == self.metaData.srcArr.length) {
 							self.changeButton(`pickUp`);
 							self.zip.generateAsync({
@@ -802,8 +828,9 @@
 	window.getDownLoadButton = () => {
 		$("div.post-content-inner").each((i, div) => {
 			$(div).addClass("boxIndex").attr("boxIndex", i);
-			$(div).find("div.btn-group-tabs").append(`<button class="btn btn-default btn-md downloadButton zip" onclick="getImg(event)"><i class="fa fa-file-archive-o fa-2x" style="color: #f9a63b  !important;"></i> <span class="btn-text-sub downloadSpanZip" style="color: #f9a63b  !important;">${setting.getDefault('downloadImgZip')}</span></button><button class="btn btn-default btn-md downloadButton file" onclick="getImg(event)"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${setting.getDefault('downloadImg')}</span></button>`);
+			$(div).find("div.btn-group-tabs").append(`<button box-type="box" class="btn btn-default btn-md downloadButton zip" onclick="getImg(event)"><i class="fa fa-file-archive-o fa-2x" style="color: #f9a63b  !important;"></i> <span class="btn-text-sub downloadSpanZip" style="color: #f9a63b  !important;">${setting.getDefault('downloadImgZip')}</span></button><button box-type="box" class="btn btn-default btn-md downloadButton file" onclick="getImg(event)"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${setting.getDefault('downloadImg')}</span></button>`);
 		});
+		$(`.the-post`).find("div.btn-group-tabs").append(`<button box-type="post" class="btn btn-default btn-md downloadButton zip" onclick="getImg(event)"><i class="fa fa-file-archive-o fa-2x" style="color: #f9a63b  !important;"></i> <span class="btn-text-sub downloadSpanZip" style="color: #f9a63b  !important;">${setting.getDefault('downloadImgZip')}</span></button><button box-type="post" class="btn btn-default btn-md downloadButton file" onclick="getImg(event)"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${setting.getDefault('downloadImg')}</span></button>`);
 		$('.set-FD').remove();
 		$("div#page").append(`<div id="settingCenter" onclick="openSettingCenter()"></div>`);
 		$("div#page").append(setting.settingCenterTemplate());
