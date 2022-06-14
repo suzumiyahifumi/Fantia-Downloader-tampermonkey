@@ -232,7 +232,7 @@
 					});
 				}
 			}
-			setting.saveCookie();
+			this.saveCookie(false);
 
 			this.metaJson = {};
 			this.metaData = {};
@@ -249,7 +249,7 @@
 			return this;
 		}
 
-		saveCookie() {
+		saveCookie(check) {
 			if (this.cookie.cookieSave == 'On') {
 				let date = new Date();
 				date.setDate(date.getDate() + 75);
@@ -277,7 +277,7 @@
 				cookie[`authorId_${this.authorId}`] = 'Off';
 				this.updateCookie(cookie);
 			}
-			return alert(this.getDefault(`saveMessage`, this.lang));
+			return (check != false)? alert(this.getDefault(`saveMessage`, this.lang)) : true;
 		}
 
 		updateCookie(cookie = undefined) {
