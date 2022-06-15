@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      3.1.0
+// @version      3.1.1
 // @description  Download your Fantia rewards more easily!
 // @description:en  Download your Fantia rewards more easily!
 // @description:ja  Download your Fantia rewards more easily!
@@ -174,7 +174,9 @@
 	$('nav.scroll-tabs>div').append(`<a id="set" class="tab-item tab-item-text set-FD" style="cursor: pointer;" onclick="JAVASCRIPT:getDownLoadButton()">擷取下載</a>`);
 
 	let init = setInterval(() => {
-		if ($(`div[id^='post-content-id-']`).length != 0 && $(`.the-post`).length != 0) {
+		let pageType = (window.location.href.match(/https:\/\/fantia\.jp\/posts\/*/g) != null) ? `post` : `backnumber`;
+		let post = (pageType == "backnumber")? 1 : $(`.the-post`).length;
+		if ($(`div[id^='post-content-id-']`).length != 0 && post != 0) {
 			$(`div.image-thumbnails`).each((i, div) => {
 				let b = $(div).closest('div.content-block').find(`div[ng-if='$ctrl.isVisibleAndMulti()']`);
 				if (b.length == 0) $(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
