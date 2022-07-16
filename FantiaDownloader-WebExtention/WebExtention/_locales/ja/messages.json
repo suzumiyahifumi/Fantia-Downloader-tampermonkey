@@ -1,0 +1,10 @@
+{
+	"appName": {
+		"message": "Fantia ダウンローダー ",
+		"description": "Fantia-DL"
+	},
+	"appDesc": {
+		"message": "この拡張機能は Fantia-Downloader-tampermonkey の拡張機能バージョンです",
+		"description": "この拡張機能はFantiaの投稿の画像をZIPフォルダに圧縮しでDLすることができる。"
+	}
+}

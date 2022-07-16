@@ -1,7 +1,8 @@
 {  
-  "name": "Fantia downloader",  
-  "version": "3.1.0",
-  "description": "Download your Fantia rewards more easily! ",
+  "name": "__MSG_appName__",
+  "version": "3.1.2",
+  "description": "__MSG_appDesc__",
+  "default_locale": "en",
   "manifest_version": 3,
   "author": "suzumiyahifumi",
   "icons": { "64": "icon_64.png" },

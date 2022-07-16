@@ -1,0 +1,10 @@
+{
+	"appName": {
+		"message": "Fantia downloader ",
+		"description": "Download your Fantia rewards more easily! "
+	},
+	"appDesc": {
+		"message": "This extension is Modified from Fantia-Downloader-tampermonkey.",
+		"description": "This script will append a download button to the Fanita Image Box for downloading whole image in a ZIP file."
+	}
+}

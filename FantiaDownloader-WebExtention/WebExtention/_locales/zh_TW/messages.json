@@ -1,0 +1,10 @@
+{
+	"appName": {
+		"message": "Fantia downloader ",
+		"description": "輕鬆下載 Fantia 獎勵。 （Fantia 下載器）"
+	},
+	"appDesc": {
+		"message": "本擴充為 Fantia-Downloader-tampermonkey 的 擴充版",
+		"description": "在 Fantia 的圖片框上增加下載按鈕，點擊後自動打包成 ZIP 並下載儲存。"
+	}
+}
