@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      3.1.1
+// @version      3.1.3
 // @description  Download your Fantia rewards more easily!
 // @description:en  Download your Fantia rewards more easily!
 // @description:ja  Download your Fantia rewards more easily!
@@ -175,8 +175,13 @@
 
 	let init = setInterval(() => {
 		let pageType = (window.location.href.match(/https:\/\/fantia\.jp\/posts\/*/g) != null) ? `post` : `backnumber`;
-		let post = (pageType == "backnumber")? 1 : $(`.the-post`).length;
-		if ($(`div[id^='post-content-id-']`).length != 0 && post != 0) {
+		let post = (pageType == "backnumber") ? 1 : $(`.the-post`).length;
+		if (window.setting) {
+			var postContent = (window.setting.metaData.content.length == 0) ? true : false;
+		} else {
+			window.setting = new Setting();
+		}
+		if (($(`div[id^='post-content-id-']`).length != 0 || postContent) && post != 0) {
 			$(`div.image-thumbnails`).each((i, div) => {
 				let b = $(div).closest('div.content-block').find(`div[ng-if='$ctrl.isVisibleAndMulti()']`);
 				if (b.length == 0) $(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
@@ -185,7 +190,6 @@
 				$(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope blogBox" blog-img-index="${$(div).attr("data-id")}"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
 			});
 			$(`.the-post .post-thumbnail .img-default`).closest(`div.post-thumbnail`).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
-			window.setting = new Setting();
 			window.getDownLoadButton();
 			clearInterval(init);
 		}
