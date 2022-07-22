@@ -1,11 +1,11 @@
 # Fantia-Downloader-tampermonkey
 在 Fantia 的圖片框上增加下載按鈕，點擊後自動打包成 ZIP 並下載儲存。 <br>
-This script will add a download button to the Fanita Image Box for downloading whole image in a ZIP file.<br>
+This script will add a download button to the Fantia Image Box for downloading whole image in a ZIP file.<br>
 この拡張機能はFantiaの投稿の画像をZIPフォルダに圧縮しでDLすることができる。<br>
 
 * 可以取得瀏覽器擴充版本（You can get extension version for Firefox and Chrome）：
   1. Firefox：[Fantia downloader Firefox (ver3.1.3)](https://addons.mozilla.org/zh-TW/firefox/addon/fantia-downloader/)
-  2. Chrome： [Fantia downloader Chrome (ver3.1.2)](https://chrome.google.com/webstore/detail/fantia-downloader/cfkejojncmolgahkabegcdbcbmnghhcp?hl=zh-TW&authuser=0) <br>
+  2. Chrome： [Fantia downloader Chrome (ver3.1.3)](https://chrome.google.com/webstore/detail/fantia-downloader/cfkejojncmolgahkabegcdbcbmnghhcp?hl=zh-TW&authuser=0) <br>
   * Use userscript version can get the fastest version update and maintain!
 
 #### NEW Version v3.1
