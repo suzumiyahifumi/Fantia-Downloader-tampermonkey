@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      3.1.3
+// @version      3.1.4
 // @description  Download your Fantia rewards more easily!
 // @description:en  Download your Fantia rewards more easily!
 // @description:ja  Download your Fantia rewards more easily!
@@ -242,6 +242,14 @@
 
 			this.metaJson = {};
 			this.metaData = {};
+			
+			if (window.csrfToken) {
+				$.ajaxSetup({
+					headers: {
+						"x-csrf-token": window.csrfToken
+					}
+				});
+			}
 			let self = this;
 			$.get(this.jsonUrl, (json) => {
 				self.metaJson = json;
