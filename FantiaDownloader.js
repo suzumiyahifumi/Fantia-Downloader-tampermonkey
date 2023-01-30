@@ -242,6 +242,14 @@
 
 			this.metaJson = {};
 			this.metaData = {};
+			
+			if (window.csrfToken) {
+				$.ajaxSetup({
+					headers: {
+						"x-csrf-token": window.csrfToken
+					}
+				});
+			}
 			let self = this;
 			$.get(this.jsonUrl, (json) => {
 				self.metaJson = json;
