@@ -5,7 +5,7 @@ This script will add a download button to the Fantia Image Box for downloading w
 
 * 可以取得瀏覽器擴充版本（You can get extension version for Firefox and Chrome）：
   1. Firefox：[Fantia downloader Firefox (ver3.1.4)](https://addons.mozilla.org/zh-TW/firefox/addon/fantia-downloader/)
-  2. Chrome： [Fantia downloader Chrome (ver3.1.3)](https://chrome.google.com/webstore/detail/fantia-downloader/cfkejojncmolgahkabegcdbcbmnghhcp?hl=zh-TW&authuser=0) <br>
+  2. Chrome： [Fantia downloader Chrome (ver3.1.4)](https://chrome.google.com/webstore/detail/fantia-downloader/cfkejojncmolgahkabegcdbcbmnghhcp?hl=zh-TW&authuser=0) <br>
   * Use userscript version can get the fastest version update and maintain!
 
 #### NEW Version v3.1
