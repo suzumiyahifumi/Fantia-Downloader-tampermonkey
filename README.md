@@ -4,7 +4,7 @@ This script will add a download button to the Fantia Image Box for downloading w
 この拡張機能はFantiaの投稿の画像をZIPフォルダに圧縮しでDLすることができる。<br>
 
 * 可以取得瀏覽器擴充版本（You can get extension version for Firefox and Chrome）：
-  1. Firefox：[Fantia downloader Firefox (ver3.1.4)](https://addons.mozilla.org/zh-TW/firefox/addon/fantia-downloader/)
+  1. Firefox：[Fantia downloader Firefox (ver3.1.6)](https://addons.mozilla.org/zh-TW/firefox/addon/fantia-downloader/)
   2. Chrome： [Fantia downloader Chrome (ver3.1.4)](https://chrome.google.com/webstore/detail/fantia-downloader/cfkejojncmolgahkabegcdbcbmnghhcp?hl=zh-TW&authuser=0) <br>
   * Use userscript version can get the fastest version update and maintain!
 
@@ -26,7 +26,7 @@ Please use this script with [Tampermonkey](https://www.tampermonkey.net/). <br>
 You can install this script from greasyfork ([Fantia downloader](https://greasyfork.org/zh-TW/scripts/423306-fantia-downloader)).<br>
 <br>
 ### 可以在 GitHub 上看到維護的 code:<br>
-Check source code on GitHub ([Fantia-Downloader-tampermonkey](https://github.com/suzumiyahifumi/Fantia-Downloader-tampermonkey)).<br>
+Check source code on GitHub ([Fantia-Downloader-tampermonkey ver3.1.6](https://github.com/suzumiyahifumi/Fantia-Downloader-tampermonkey)).<br>
 
 # 注意！ watch out! 
 如果使用其他瀏覽器時遇到錯誤，請嘗試使用 Firefox 來安裝此腳本。<br>
