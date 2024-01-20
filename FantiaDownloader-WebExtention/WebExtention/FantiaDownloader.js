@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      3.1.5
+// @version      3.1.6
 // @description  Download your Fantia rewards more easily!
 // @description:en  Download your Fantia rewards more easily!
 // @description:ja  Download your Fantia rewards more easily!
@@ -177,7 +177,7 @@
 		let pageType = (window.location.href.match(/https:\/\/fantia\.jp\/posts\/*/g) != null) ? `post` : `backnumber`;
 		let post = (pageType == "backnumber") ? 1 : $(`.the-post`).length;
 		if (window.setting) {
-			var postContent = (window.setting.metaData.content.length == 0) ? true : false;
+			var postContent = (window.setting.metaData.content == undefined || window.setting.metaData.content.length == 0) ? true : false;
 		} else {
 			window.setting = new Setting();
 		}
