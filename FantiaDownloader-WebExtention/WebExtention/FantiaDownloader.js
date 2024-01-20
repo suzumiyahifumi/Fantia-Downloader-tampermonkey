@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      3.1.4
+// @version      3.1.5
 // @description  Download your Fantia rewards more easily!
 // @description:en  Download your Fantia rewards more easily!
 // @description:ja  Download your Fantia rewards more easily!
@@ -12,11 +12,11 @@
 // @include        https://fantia.jp/posts/*
 // @include        https://fantia.jp/fanclubs/*/backnumbers*
 // @icon         https://www.google.com/s2/favicons?domain=fantia.jp
-// @require      https://code.jquery.com/jquery-3.4.1.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js
 // @grant        none
 // ==/UserScript==
 
+//log: 3.1.5 remove jQuery inject
 (function () {
 	'use strict';
 
@@ -182,10 +182,6 @@
 			window.setting = new Setting();
 		}
 		if (($(`div[id^='post-content-id-']`).length != 0 || postContent) && post != 0) {
-			$(`div.image-thumbnails`).each((i, div) => {
-				let b = $(div).closest('div.content-block').find(`div[ng-if='$ctrl.isVisibleAndMulti()']`);
-				if (b.length == 0) $(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
-			});
 			$(`a.fantiaImage`).each((i, div) => {
 				$(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope blogBox" blog-img-index="${$(div).attr("data-id")}"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
 			});
@@ -200,7 +196,7 @@
 
 			this.pageType = (window.location.href.match(/https:\/\/fantia\.jp\/posts\/*/g) != null) ? `post` : `backnumber`;
 			let qs = new URLSearchParams((this.pageType == `post`) ? `` : (window.location.search == ``) ? $(`div.text-center>a.active`).attr("href").split("?")[1] : window.location.search);
-			this.jsonUrl = `https://fantia.jp/api/v1/${(this.pageType == `post`)? `posts/${window.location.href.split("/").pop()}`: `fanclub/backnumbers/monthly_contents/plan/${qs.get("plan")}/month/${qs.get("month")}`}`;
+			this.jsonUrl = `https://fantia.jp/api/v1/${(this.pageType == `post`) ? `posts/${window.location.href.split("/").pop()}` : `fanclub/backnumbers/monthly_contents/plan/${qs.get("plan")}/month/${qs.get("month")}`}`;
 
 			let authorId = $("h1.fanclub-name>a").attr(`href`).split("/").pop();
 
@@ -242,7 +238,7 @@
 
 			this.metaJson = {};
 			this.metaData = {};
-			
+
 			if (window.csrfToken) {
 				$.ajaxSetup({
 					headers: {
@@ -291,7 +287,7 @@
 				cookie[`authorId_${this.authorId}`] = 'Off';
 				this.updateCookie(cookie);
 			}
-			return (check != false)? alert(this.getDefault(`saveMessage`, this.lang)) : true;
+			return (check != false) ? alert(this.getDefault(`saveMessage`, this.lang)) : true;
 		}
 
 		updateCookie(cookie = undefined) {
@@ -459,7 +455,7 @@
 
 		renderSettingParams() {
 			$(`#cookie${this.cookieSave}`).attr("checked", true);
-			$(`#${(this.authorSaveCheck == `On`)? `authorSave` : `generalSave` }`).attr("checked", true);
+			$(`#${(this.authorSaveCheck == `On`) ? `authorSave` : `generalSave`}`).attr("checked", true);
 			$(`#selectSetting option[value='${this.lang}']`).attr("selected", true);
 			$(`#zipNameInput`).val(this[(this.authorSaveCheck == `On`) ? `authorSave` : `generalSave`].zipName);
 			$(`#fileNameInput`).val(this[(this.authorSaveCheck == `On`) ? `authorSave` : `generalSave`].fileName);
@@ -528,7 +524,7 @@
 							<th>${setting.getDefault(`tableMean`, lang)}</th>
 						</tr>`;
 			let a = [`user`, `uid`, `postTitle`, `postId`, `boxTitle`, `imgIndex:0`, `plan`, `fee`, `postDate`, `taskDate`, `ext`].forEach((p, i) => {
-				table += `<tr style="background-color: ${(i%2 == 0)?`#71b6ff2b`:`#fff0`};">
+				table += `<tr style="background-color: ${(i % 2 == 0) ? `#71b6ff2b` : `#fff0`};">
 							<td style="border-right: 1px solid #131313;">{${p}}</td>
 							<td style="border-left: 1px solid #131313;">${setting.getDefault(p, lang)}</td>
 						</tr>`;
@@ -540,7 +536,7 @@
 		}
 
 		settingCenterTemplate(lang) {
-			return `<div id="settingCenterDiv" class="close ${(CSS.supports(`backdrop-filter`, `blur(15px)`))? `` : `unBlur` }">
+			return `<div id="settingCenterDiv" class="close ${(CSS.supports(`backdrop-filter`, `blur(15px)`)) ? `` : `unBlur`}">
 	<div class="settingTitleColor" style="width: 100%;height: 25px;position: relative;background-color: #ffffff78;display: flex;align-items: center;">
 		<p id="titleSetting" style="margin: 0 auto;">${this.getDefault(`settingCenter`, lang)}</p>
 	</div>
@@ -654,8 +650,8 @@
 				this.metaData.title = setting.metaJson.post.title;
 				this.metaData.d = 1;
 			}
-			this.zipName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].zipName}.zip`;
-			this.fileName = `${setting[`${(setting.authorSaveCheck == 'On')? `author` : `general`}Save`].fileName}.{ext}`;
+			this.zipName = `${setting[`${(setting.authorSaveCheck == 'On') ? `author` : `general`}Save`].zipName}.zip`;
+			this.fileName = `${setting[`${(setting.authorSaveCheck == 'On') ? `author` : `general`}Save`].fileName}.{ext}`;
 			this.dateFormat = setting.dateFormat;
 			this.zipfmt = ``;
 			this.zipImgIndex0 = 0;
@@ -673,9 +669,13 @@
 				case `start`:
 					button.addClass(['active', 'hdr']);
 					if (this.type == `file`) {
-						button.find('i').removeClass('fa-download').addClass(['fa-spinner', 'fa-pulse']);
+						button.find('i').removeClass('fa-download');
+						button.find('i').addClass('fa-spinner');
+						button.find('i').addClass('fa-pulse');
 					} else {
-						button.find('i').removeClass('fa-file-archive-o').addClass(['fa-spinner', 'fa-pulse']);
+						button.find('i').removeClass('fa-file-archive-o');
+						button.find('i').addClass('fa-spinner');
+						button.find('i').addClass('fa-pulse');
 					}
 					break;
 				case `catchLink`:
@@ -689,9 +689,9 @@
 					break;
 				case `end`:
 					if (this.type == `file`) {
-						button.find('i').removeClass(['fa-spinner', 'fa-pulse']).addClass('fa-download');
+						button.find('i').removeClass('fa-pulse').removeClass('fa-spinner').addClass('fa-download');
 					} else {
-						button.find('i').removeClass(['fa-spinner', 'fa-pulse']).addClass('fa-file-archive-o');
+						button.find('i').removeClass('fa-pulse').removeClass('fa-spinner').addClass('fa-file-archive-o');
 					}
 					button.removeClass(['active', 'hdr']);
 					button.find('span').text(setting.getDefault(`done`));
@@ -787,15 +787,15 @@
 						if (dataCont == self.metaData.srcArr.length) {
 							self.changeButton(`pickUp`);
 							self.zip.generateAsync({
-									type: "blob"
-								},
+								type: "blob"
+							},
 								function updateCallback(metadata) {
 									self.changeButton(`log`, `${setting.getDefault(`processing`)}：${metadata.percent.toFixed(2)} %`);
 								}).then(function (content) {
-								self.changeButton('end');
-								downloader.download(content, self.nextName('zip', 0, mimeType));
-								return;
-							});
+									self.changeButton('end');
+									downloader.download(content, self.nextName('zip', 0, mimeType));
+									return;
+								});
 						}
 					}
 				});

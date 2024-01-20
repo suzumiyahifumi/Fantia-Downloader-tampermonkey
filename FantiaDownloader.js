@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      3.1.4
+// @version      3.1.5
 // @description  Download your Fantia rewards more easily!
 // @description:en  Download your Fantia rewards more easily!
 // @description:ja  Download your Fantia rewards more easily!
@@ -12,11 +12,11 @@
 // @include        https://fantia.jp/posts/*
 // @include        https://fantia.jp/fanclubs/*/backnumbers*
 // @icon         https://www.google.com/s2/favicons?domain=fantia.jp
-// @require      https://code.jquery.com/jquery-3.4.1.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js
 // @grant        none
 // ==/UserScript==
 
+//log: 3.1.5 remove jQuery inject
 (function () {
 	'use strict';
 
@@ -182,10 +182,6 @@
 			window.setting = new Setting();
 		}
 		if (($(`div[id^='post-content-id-']`).length != 0 || postContent) && post != 0) {
-			$(`div.image-thumbnails`).each((i, div) => {
-				let b = $(div).closest('div.content-block').find(`div[ng-if='$ctrl.isVisibleAndMulti()']`);
-				if (b.length == 0) $(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
-			});
 			$(`a.fantiaImage`).each((i, div) => {
 				$(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope blogBox" blog-img-index="${$(div).attr("data-id")}"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
 			});
@@ -673,9 +669,13 @@
 				case `start`:
 					button.addClass(['active', 'hdr']);
 					if (this.type == `file`) {
-						button.find('i').removeClass('fa-download').addClass(['fa-spinner', 'fa-pulse']);
+						button.find('i').removeClass('fa-download');
+						button.find('i').addClass('fa-spinner');
+						button.find('i').addClass('fa-pulse');
 					} else {
-						button.find('i').removeClass('fa-file-archive-o').addClass(['fa-spinner', 'fa-pulse']);
+						button.find('i').removeClass('fa-file-archive-o');
+						button.find('i').addClass('fa-spinner');
+						button.find('i').addClass('fa-pulse');
 					}
 					break;
 				case `catchLink`:
@@ -689,9 +689,9 @@
 					break;
 				case `end`:
 					if (this.type == `file`) {
-						button.find('i').removeClass(['fa-spinner', 'fa-pulse']).addClass('fa-download');
+						button.find('i').removeClass('fa-pulse').removeClass('fa-spinner').addClass('fa-download');
 					} else {
-						button.find('i').removeClass(['fa-spinner', 'fa-pulse']).addClass('fa-file-archive-o');
+						button.find('i').removeClass('fa-pulse').removeClass('fa-spinner').addClass('fa-file-archive-o');
 					}
 					button.removeClass(['active', 'hdr']);
 					button.find('span').text(setting.getDefault(`done`));
