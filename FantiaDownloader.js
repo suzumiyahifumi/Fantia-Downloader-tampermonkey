@@ -4,7 +4,7 @@
 // @name:en      Fantia downloader
 // @name:ja      Fantia downloader
 // @namespace    http://tampermonkey.net/
-// @version      3.1.6
+// @version      3.1.7
 // @description  Download your Fantia rewards more easily!
 // @description:en  Download your Fantia rewards more easily!
 // @description:ja  Download your Fantia rewards more easily!
@@ -182,9 +182,18 @@
 			window.setting = new Setting();
 		}
 		if (($(`div[id^='post-content-id-']`).length != 0 || postContent) && post != 0) {
+
+			// for nonImgbox
+			$(`div.image-thumbnails`).each((i, div) => {
+				let b = $(div).closest('div.content-block').find(`div.text-center > div.btn-group-tabs`);
+				if (b.length == 0) $(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
+			});
+
+			// for single image
 			$(`a.fantiaImage`).each((i, div) => {
 				$(div).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope blogBox" blog-img-index="${$(div).attr("data-id")}"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
 			});
+			// for post
 			$(`.the-post .post-thumbnail .img-default`).closest(`div.post-thumbnail`).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
 			window.getDownLoadButton();
 			clearInterval(init);
