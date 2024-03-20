@@ -23,7 +23,7 @@ This script will add a download button to the Fantia Image Box for downloading w
 Please use this script with [Tampermonkey](https://www.tampermonkey.net/). <br>
 <br>
 ### 可以從 greasyfork 取得腳本：<br>
-You can install this script from greasyfork ([Fantia downloader (ver3.1.7)](https://greasyfork.org/zh-TW/scripts/423306-fantia-downloader)).<br>
+You can install this script from greasyfork ([Fantia downloader (ver3.1.8)](https://greasyfork.org/zh-TW/scripts/423306-fantia-downloader)).<br>
 <br>
 ### 可以在 GitHub 上看到維護的 code:<br>
 Check source code on GitHub ([Fantia-Downloader-tampermonkey](https://github.com/suzumiyahifumi/Fantia-Downloader-tampermonkey)).<br>
