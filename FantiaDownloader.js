@@ -195,8 +195,12 @@
 			});
 			// for post
 			$(`.the-post .post-thumbnail .img-default`).closest(`div.post-thumbnail`).before(`<div ng-if="$ctrl.isVisibleAndMulti()" class="ng-scope"><div class="text-center"><div class="btn-group btn-group-tabs mb-20" role="group"></div></div></div>`);
-			window.getDownLoadButton();
-			clearInterval(init);
+			
+			// make sure the button has been inserted before stopping interval.
+			if ($(`div[role="group"]`).length) {
+				window.getDownLoadButton();
+				clearInterval(init);
+			}
 		}
 	}, 500);
 
