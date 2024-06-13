@@ -735,8 +735,8 @@
 				plan: () => {
 					let feeStr = this.metaData.plan || this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
 					let match = this.metaData.plan || feeStr.match(new RegExp(/（\d+円）以上限定$/g));
-					if (match != null) return this.metaData.plan || feeStr.replace(match[0], ``);
-					return this.metaData.plan || `一般公開`;
+					if (match != null) return (this.metaData.plan || feeStr.replace(match[0], ``)).replace(/\/|\\/g, replaceSlash);
+					return (this.metaData.plan || `一般公開`).replace(/\/|\\/g, replaceSlash);
 				},
 				fee: () => {
 					let feeStr = this.metaData.fee || this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
