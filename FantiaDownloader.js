@@ -719,27 +719,28 @@
 		}
 
 		paramsParser(type, fmt) {
+			const replaceSlash = `_`;
 			let o = {
 				user: () => {
-					return this.metaData.user || $("h1.fanclub-name>a").text();
+					return (this.metaData.user || $("h1.fanclub-name>a").text()).replace(/\/|\\/g, replaceSlash);
 				},
 				uid: () => {
 					return this.metaData.uid || this.authorId;
 				},
 				postTitle: () => {
-					return this.metaData.postTitle || $("h1.post-title").text();
+					return (this.metaData.postTitle || $("h1.post-title").text()).replace(/\/|\\/g, replaceSlash);
 				},
 				postId: () => {
 					return this.metaData.postId || window.location.href.split("/").pop();
 				},
 				boxTitle: () => {
-					return this.metaData.boxTitle || this.button.closest("div.post-content-inner").find('h2').text();
+					return (this.metaData.boxTitle || this.button.closest("div.post-content-inner").find('h2').text()).replace(/\/|\\/g, replaceSlash);
 				},
 				plan: () => {
 					let feeStr = this.metaData.plan || this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
 					let match = this.metaData.plan || feeStr.match(new RegExp(/（\d+円）以上限定$/g));
-					if (match != null) return this.metaData.plan || feeStr.replace(match[0], ``);
-					return this.metaData.plan || `一般公開`;
+					if (match != null) return (this.metaData.plan || feeStr.replace(match[0], ``)).replace(/\/|\\/g, replaceSlash);
+					return (this.metaData.plan || `一般公開`).replace(/\/|\\/g, replaceSlash);
 				},
 				fee: () => {
 					let feeStr = this.metaData.fee || this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
