@@ -715,21 +715,22 @@
 		}
 
 		paramsParser(type, fmt) {
+			const replaceSlash = `_`;
 			let o = {
 				user: () => {
-					return this.metaData.user || $("h1.fanclub-name>a").text();
+					return (this.metaData.user || $("h1.fanclub-name>a").text()).replace(/\/|\\/g, replaceSlash);
 				},
 				uid: () => {
 					return this.metaData.uid || this.authorId;
 				},
 				postTitle: () => {
-					return this.metaData.postTitle || $("h1.post-title").text();
+					return (this.metaData.postTitle || $("h1.post-title").text()).replace(/\/|\\/g, replaceSlash);
 				},
 				postId: () => {
 					return this.metaData.postId || window.location.href.split("/").pop();
 				},
 				boxTitle: () => {
-					return this.metaData.boxTitle || this.button.closest("div.post-content-inner").find('h2').text();
+					return (this.metaData.boxTitle || this.button.closest("div.post-content-inner").find('h2').text()).replace(/\/|\\/g, replaceSlash);
 				},
 				plan: () => {
 					let feeStr = this.metaData.plan || this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
