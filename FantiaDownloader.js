@@ -242,8 +242,8 @@
 					let a = this.cookieParser([`authorSaveZIP_${authorId}`, `authorSaveFile_${authorId}`]);
 					this.setCookie({
 						authorSave: {
-							zipName: a[`authorSaveZIP_${authorId}`],
-							fileName: a[`authorSaveFile_${authorId}`]
+							zipName: a[`authorSaveZIP_${authorId}`] || this.defaultCookie(`authorSave`).zipName,
+							fileName: a[`authorSaveFile_${authorId}`] || this.defaultCookie(`authorSave`).fileName
 						}
 					});
 
