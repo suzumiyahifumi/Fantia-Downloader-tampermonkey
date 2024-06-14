@@ -235,16 +235,24 @@
 						fileName: g.generalSaveFile
 					}
 				});
-				if (this.cookie[`authorId_${authorId}`] || this.cookie[`authorId_${authorId}`] == `On`) {
+				if (this.cookie[`authorId_${authorId}`]) {
+					// `authorId_${authorId}` exist in cookie.
+
+					// load authorSave settings even when authorSave is off.
 					let a = this.cookieParser([`authorSaveZIP_${authorId}`, `authorSaveFile_${authorId}`]);
-					this[`authorId_${authorId}`] = `On`;
 					this.setCookie({
-						authorSaveCheck: `On`,
 						authorSave: {
 							zipName: a[`authorSaveZIP_${authorId}`],
 							fileName: a[`authorSaveFile_${authorId}`]
 						}
 					});
+
+					if (this.cookie[`authorId_${authorId}`] === 'On') {
+						this[`authorId_${authorId}`] = `On`;
+						this.setCookie({
+							authorSaveCheck: `On`
+						});
+					}
 				}
 			}
 			this.saveCookie(false);
@@ -288,6 +296,8 @@
 					cookie[`authorId_${this.authorId}`] = 'On';
 					cookie[`authorSaveZIP_${this.authorId}`] = this.cookie.authorSave.zipName;
 					cookie[`authorSaveFile_${this.authorId}`] = this.cookie.authorSave.fileName;
+				} else {
+					cookie[`authorId_${this.authorId}`] = 'Off';
 				}
 				this.updateCookie(cookie);
 			} else {
