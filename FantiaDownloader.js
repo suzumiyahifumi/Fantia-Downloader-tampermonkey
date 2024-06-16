@@ -13,7 +13,7 @@
 // @include        https://fantia.jp/fanclubs/*/backnumbers*
 // @icon         https://www.google.com/s2/favicons?domain=fantia.jp
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js
-// @grant        none
+// @grant        GM_download
 // ==/UserScript==
 
 //log: 3.1.5 remove jQuery inject
@@ -817,13 +817,12 @@
 		}
 
 		static download(content, name) {
-			let tag = document.createElement('a');
-			tag.href = (URL || webkitURL).createObjectURL(content);
-			tag.download = name;
-			document.body.appendChild(tag);
-			tag.click();
-			document.body.removeChild(tag);
-			return;
+			console.log({content, name})
+			GM_download({
+				name,
+				url: content instanceof Blob ? URL.createObjectURL(content) : content,
+				saveAs: false // this will popup "Save As" FileSavePicker window if set to true.
+			})
 		}
 
 		static getDigits(i) {
