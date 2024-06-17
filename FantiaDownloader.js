@@ -762,6 +762,9 @@
 				fmt = fmt.replaceAll(new RegExp('(\\{' + k + '\\})', 'g'), o[k]());
 			}
 
+			// prevent empty folder name when replace value is empty. e.g. `poseTitle//image.png`
+			fmt = fmt.replace(/(?:\\|\/){2,}/g, '/').replace(/^(\\|\/)/, '');
+
 			let s = (/\{imgIndex(\:(\d+))?\}/g.test(fmt)) ? RegExp.$2 : 0;
 			if (/\{imgIndex(\:(\d+))?\}/g.test(fmt)) fmt = fmt.replace(RegExp.$1, ``);
 			this[`${type}fmt`] = fmt;
