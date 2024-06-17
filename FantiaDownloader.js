@@ -819,7 +819,6 @@
 		}
 
 		static download(content, name) {
-			console.log({content, name})
 			GM_download({
 				name,
 				url: content instanceof Blob ? URL.createObjectURL(content) : content,
