@@ -759,7 +759,7 @@
 			};
 
 			for (let k in o) {
-				if (new RegExp('(\\{' + k + '\\})', 'g').test(fmt)) fmt = fmt.replace(RegExp.$1, o[k]());
+				fmt = fmt.replaceAll(new RegExp('(\\{' + k + '\\})', 'g'), o[k]());
 			}
 
 			let s = (/\{imgIndex(\:(\d+))?\}/g.test(fmt)) ? RegExp.$2 : 0;
