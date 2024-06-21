@@ -796,23 +796,18 @@
 			this.changeButton(`log`, `${dataCont} / ${this.metaData.srcArr.length}`);
 			let self = this;
 			this.metaData.srcArr.forEach((url, i) => {
-				downloader.loadAsArrayBuffer(url, function (imgData, mimeType, lastModified) {
+				downloader.loadAsBlob(url, function (imgData, mimeType, lastModified) {
 					dataCont += 1;
 					self.changeButton(`log`, `${dataCont} / ${self.metaData.srcArr.length}`);
 					self.mimeType = mimeType;
 					if (self.zip == undefined) {
 						if (dataCont == self.metaData.srcArr.length) self.changeButton('end');
-						let content = new Blob([imgData], {
-							type: mimeType
-						});
-						downloader.download(content, self.nextName('file', i, mimeType));
+						downloader.download(immData, self.nextName('file', i, mimeType));
 						return;
 					} else {
-						const sDate = lastModified && lastModified !== '' ? new Date(lastModified) : null
-						const date = sDate ? new Date(sDate.getTime() - sDate.getTimezoneOffset() * 60000) : new Date()
-						self.zip.file(self.nextName('file', i, mimeType), imgData, {
-							date
-						});
+						const sDate = lastModified && lastModified !== '' ? new Date(lastModified) : null;
+						const date = sDate ? new Date(sDate.getTime() - sDate.getTimezoneOffset() * 60000) : new Date();
+						self.zip.file(self.nextName('file', i, mimeType), imgData, { date });
 						if (dataCont == self.metaData.srcArr.length) {
 							self.changeButton(`pickUp`);
 							self.zip.generateAsync({
@@ -848,21 +843,48 @@
 			return `${L}`;
 		}
 
-		static loadAsArrayBuffer(url, callback) {
-			let xhr = new XMLHttpRequest();
-			xhr.open("GET", url);
-			xhr.responseType = "arraybuffer";
-			xhr.onerror = function (error) {
-				return new Error(`ERROR`);
-			};
-			xhr.onload = function () {
-				if (xhr.status === 200) {
-					callback(xhr.response, xhr.getResponseHeader("Content-Type"), xhr.getResponseHeader("Last-Modified"));
-				} else {
-					return new Error(`ERROR`);
+		/**
+		 * Load file into Blob.
+		 * @param {string} url 
+		 * @param {(blob: Blob, contentType: string, lastModified: string) => *} callback 
+		 */
+		static loadAsBlob(url, callback) {
+			GM_xmlhttpRequest({
+				method: 'GET',
+				url,
+				responseType: 'blob',
+				onload: ({ response, responseHeaders }) => {
+					// parse header string
+					const headers = responseHeaders
+						.split('\r\n')
+						.filter(str => str !== '')
+						.map((str) => {
+							const [k, v] = str.split(': ');
+							return { [k]: v };
+						})
+						.reduce((per, cur) => Object.assign(per, cur));
+
+						debugger
+
+					callback(response, headers['content-type'], headers['last-modified']);
+				},
+				onerror: (err) => {
+					throw err;
 				}
-			};
-			xhr.send();
+			});
+		}
+
+		/**
+		 * `loadAsBlob` but async.
+		 * @param {string} url URL string 
+		 * @returns {Promise<Array<Blob | string> | Error>} If no error, reture values is store inside an array.
+		 */
+		static loadAsBlobAsync(url) {
+			return new Promise((resolve, reject) => {
+				this.loadAsBlob(url, (...args) => {
+					(args instanceof Error ? reject : resolve)(args);
+				})
+			})
 		}
 	}
 
