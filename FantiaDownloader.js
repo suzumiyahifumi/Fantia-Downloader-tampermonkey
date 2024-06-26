@@ -808,7 +808,6 @@
 						);
 
 						if (dataCont === self.metaData.srcArr.length) {
-							console.log({zip: self.zip})
 							self.changeButton(`pickUp`);
 							self.zip
 								.close({
