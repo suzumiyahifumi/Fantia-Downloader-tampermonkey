@@ -14,4 +14,5 @@ function injectScript(file_path, tag) {
 }
 //if (window.jQuery == undefined) {injectScript(chrome.runtime.getURL('jquery-3.4.1.js'), 'body');}
 injectScript(chrome.runtime.getURL('jszip.js'), 'body');
+injectScript(chrome.runtime.getURL('zip-full.min.js'), 'body');
 injectScript(chrome.runtime.getURL('FantiaDownloader.js'), 'body');
