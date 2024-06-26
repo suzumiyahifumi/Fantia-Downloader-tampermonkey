@@ -12,7 +12,7 @@
 // @include        https://fantia.jp/posts/*
 // @include        https://fantia.jp/fanclubs/*/backnumbers*
 // @icon         https://www.google.com/s2/favicons?domain=fantia.jp
-// @require      https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js
+// @require      https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.45/dist/zip-full.min.js
 // @grant        none
 // ==/UserScript==
 
