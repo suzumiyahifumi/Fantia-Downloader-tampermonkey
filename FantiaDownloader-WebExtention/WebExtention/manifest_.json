@@ -38,6 +38,7 @@
     "*://*.fantia.jp/*"
   ],
   "permissions": [
-    "webRequest"
+    "webRequest",
+    "downloads"
   ]
 }

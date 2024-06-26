@@ -5,8 +5,31 @@ chrome.runtime.onMessage.addListener((msg, sender, sendRes) => {
     if (msg.get === 'xhrRequestHeader') {
         return Promise.resolve(csrfToken);
     }
+    if (msg.get === 'download') {
+        return Promise.resolve(download(msg.options));
+    }
     return false;
 });
+
+function download({ url, filename, saveAs = false }) {
+    return new Promise(async (resolve, reject) => {
+        await chrome.downloads.download({
+                url: url instanceof Blob ? URL.createObjectURL(url) : url,
+                filename,
+                saveAs
+            })
+            .then(() => {
+                resolve();
+            })
+            .catch(() => {
+                reject();
+            });
+        
+        if (url.startsWith('blob')) {
+            URL.revokeObjectURL(url);
+        }
+    })
+}
 
 function getCSRF() {
     return new Promise((resolve, reject) => {
