@@ -251,24 +251,27 @@
 
 			this.metaJson = {};
 			this.metaData = {};
-
-			if (window.csrfToken) {
-				$.ajaxSetup({
-					headers: {
-						"x-csrf-token": window.csrfToken
-					}
-				});
-			}
 			let self = this;
-			$.get(this.jsonUrl, (json) => {
-				self.metaJson = json;
-				let data = json[self.pageType];
-				self.metaData = {
-					user: data.fanclub.creator_name,
-					uid: data.fanclub.id,
-					content: data[`${self.pageType}_contents`]
-				};
+
+			// when using this script inside web-extention, unsafeWindow will be replace by an promise object with a `csrfToken` property inside.
+			Promise.resolve(unsafeWindow)
+				.then(() => {
+					$.ajaxSetup({
+						headers: {
+							"x-csrf-token": unsafeWindow.csrfToken
+						}
+					});
+					$.get(this.jsonUrl, (json) => {
+						self.metaJson = json;
+						let data = json[self.pageType];
+						self.metaData = {
+							user: data.fanclub.creator_name,
+							uid: data.fanclub.id,
+							content: data[`${self.pageType}_contents`]
+						};
+					});
 			});
+
 			return this;
 		}
 

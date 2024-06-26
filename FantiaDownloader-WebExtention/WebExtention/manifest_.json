@@ -6,12 +6,20 @@
   "manifest_version": 3,
   "author": "suzumiyahifumi",
   "icons": { "64": "icon_64.png" },
-  "content_scripts" : [
+  "content_scripts": [
     {  
-        "matches" : ["https://fantia.jp/posts/*", "https://fantia.jp/fanclubs/*/backnumbers*"],  
-        "js" : ["inject.js"]
+      "matches": ["https://fantia.jp/posts/*", "https://fantia.jp/fanclubs/*/backnumbers*"],  
+      "js": [
+        "jquery-3.4.1.js",
+        "jszip.js",
+        "userscriptAdapter.js",
+        "FantiaDownloader.js"
+      ]
     }  
-   ],
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
   "web_accessible_resources": [
 	{
      "resources": ["FantiaDownloader.js"],
@@ -25,5 +33,11 @@
      "resources": ["jszip.js"],
      "matches": ["http://*/*", "https://*/*"]
    }
-  ]  
+  ],
+  "host_permissions": [
+    "*://*.fantia.jp/*"
+  ],
+  "permissions": [
+    "webRequest"
+  ]
 }
