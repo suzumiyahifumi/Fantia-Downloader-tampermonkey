@@ -13,7 +13,7 @@
 // @include        https://fantia.jp/fanclubs/*/backnumbers*
 // @icon         https://www.google.com/s2/favicons?domain=fantia.jp
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js
-// @grant        none
+// @grant        GM_download
 // ==/UserScript==
 
 //log: 3.1.5 remove jQuery inject
@@ -173,13 +173,14 @@
 
 	$('nav.scroll-tabs>div').append(`<a id="set" class="tab-item tab-item-text set-FD" style="cursor: pointer;" onclick="JAVASCRIPT:getDownLoadButton()">擷取下載</a>`);
 
+	let windowSetting;
 	let init = setInterval(() => {
 		let pageType = (window.location.href.match(/https:\/\/fantia\.jp\/posts\/*/g) != null) ? `post` : `backnumber`;
 		let post = (pageType == "backnumber") ? 1 : $(`.the-post`).length;
-		if (window.setting) {
-			var postContent = (window.setting.metaData.content == undefined || window.setting.metaData.content.length == 0) ? true : false;
+		if (windowSetting) {
+			var postContent = (windowSetting.metaData.content == undefined || windowSetting.metaData.content.length == 0) ? true : false;
 		} else {
-			window.setting = new Setting();
+			windowSetting = new Setting();
 		}
 		if (($(`div[id^='post-content-id-']`).length != 0 || postContent) && post != 0) {
 
@@ -198,7 +199,8 @@
 			
 			// make sure the button has been inserted before stopping interval.
 			if ($(`div[role="group"]`).length) {
-				window.getDownLoadButton();
+				getDownLoadButton();
+				handleInteractions();
 				clearInterval(init);
 			}
 		}
@@ -543,13 +545,13 @@
 
 		paramsTemplate(lang = this.lang) {
 			let table = `<table><tbody><tr style="text-align:center;">
-							<th>${setting.getDefault(`tableParams`, lang)}</th>
-							<th>${setting.getDefault(`tableMean`, lang)}</th>
+							<th>${windowSetting.getDefault(`tableParams`, lang)}</th>
+							<th>${windowSetting.getDefault(`tableMean`, lang)}</th>
 						</tr>`;
 			let a = [`user`, `uid`, `postTitle`, `postId`, `boxTitle`, `imgIndex:0`, `plan`, `fee`, `postDate`, `taskDate`, `ext`].forEach((p, i) => {
 				table += `<tr style="background-color: ${(i % 2 == 0) ? `#71b6ff2b` : `#fff0`};">
 							<td style="border-right: 1px solid #131313;">{${p}}</td>
-							<td style="border-left: 1px solid #131313;">${setting.getDefault(p, lang)}</td>
+							<td style="border-left: 1px solid #131313;">${windowSetting.getDefault(p, lang)}</td>
 						</tr>`;
 			});
 
@@ -569,10 +571,10 @@
 			<p id="cookieSetting" style="margin: 0 auto;">${this.getDefault(`cookieButton`, lang)}</p>
 		</div>
 		<div class="settingTitleColor" style="width: calc(50% - 1px);height: 100%;background-color: #ffffff69;border-top-right-radius: 5px;border-bottom-right-radius: 5px;float: left;position: relative;margin: 0 auto 0 1px;">
-			<label style="float: left;width: 50%;height: 100%;display: flex;align-items: center;cursor: pointer;margin: auto;" for="cookieOn" id="cookieOnLabel" class="settingCenterButton"><input style="cursor: pointer;appearance: none;" type="radio" id="cookieOn" onclick="setting.setCookie({cookieSave:'On'})" name="cookieCheck">
+			<label style="float: left;width: 50%;height: 100%;display: flex;align-items: center;cursor: pointer;margin: auto;" for="cookieOn" id="cookieOnLabel" class="settingCenterButton"><input style="cursor: pointer;appearance: none;" type="radio" id="cookieOn" name="cookieCheck">
 				<div id="cookieOnLabel" style="width: 100%;height: 100%;display: flex;align-items: center;cursor: pointer;margin: auto;">
 					<span style="margin: 0 auto;">On</span></div>
-			</label><label style="float: left;width: 50%;height: 100%;display: flex;align-items: center;cursor: pointer;margin: auto;border-top-right-radius: 5px;border-bottom-right-radius: 5px;" for="cookieOff" id="cookieOffLabel" class="settingCenterButton"><input style="cursor: pointer;appearance: none;" type="radio" name="cookieCheck" id="cookieOff" onclick="setting.setCookie({cookieSave:'Off'})">
+			</label><label style="float: left;width: 50%;height: 100%;display: flex;align-items: center;cursor: pointer;margin: auto;border-top-right-radius: 5px;border-bottom-right-radius: 5px;" for="cookieOff" id="cookieOffLabel" class="settingCenterButton"><input style="cursor: pointer;appearance: none;" type="radio" name="cookieCheck" id="cookieOff">
 				<div style="width: 100%;height: 100%;display: flex;align-items: center;cursor: pointer;margin: auto;border-top-right-radius: 5px;border-bottom-right-radius: 5px;" id="cookieOffLabel"><span style="margin: 0 auto;">Off</span></div>
 			</label></div>
 	</div>
@@ -581,7 +583,7 @@
 			<p id="langSetting" style="margin: 0 auto;">${this.getDefault(`languageButton`, lang)}</p>
 		</div>
 		<div class="settingCenterButton" style="width: calc(50% - 1px);height: 100%;background-color: #77777769;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-left-color: #c8c8c800;border-left-width: 1px;border-left-style: solid;float: left;position: relative;margin: 0 auto 0 1px;">
-			<select id="selectSetting" onchange="setting.changeLang()" style="height: 100%;border-style: hidden;border-top-right-radius: 5px;border-bottom-right-radius: 5px;width: 100%;background-color: #fff;cursor: pointer;text-align: center;text-align-last: center;-webkit-appearance: none;-moz-appearance: none;" name="lang">
+			<select id="selectSetting" style="height: 100%;border-style: hidden;border-top-right-radius: 5px;border-bottom-right-radius: 5px;width: 100%;background-color: #fff;cursor: pointer;text-align: center;text-align-last: center;-webkit-appearance: none;-moz-appearance: none;" name="lang">
 				<option value="zh">中文</option>
 				<option value="en">English</option>
 				<option value="ja">日本語</option>
@@ -590,17 +592,17 @@
 	<div style="width: 95%;height: calc(100% - 80px - 50px - 7.5em);background-color: #fff0;margin: 10px auto;position: relative;border-radius: 5px;">
 		<div class="settingTitleColor" style="width: calc(50% - 1px);height: 2.5em;background-color: #ffffff69;border-top-left-radius: 5px;float: left;display: flex;align-items: center;cursor: pointer;margin: 0 1px 1px 0;/*! border-bottom-style: groove; *//*! border-bottom-color: #fff; */">
 			<label style="float: left;width: 100%;height: 100%;display: flex;align-items: center;cursor: pointer;margin: auto;" for="generalSave" class="settingCenterButton"><input style="cursor: pointer;appearance: none;" type="radio" id="generalSave" name="saveCheck">
-				<div style="width: 100%;height: 100%;display: flex;align-items: center;cursor: pointer;margin: auto;border-top-left-radius: 5px;" id="generalSaveLabel" onclick="setting.changeSaveSetting('generalSave');setting.setCookie({authorSaveCheck:'Off', authorId_${this.authorId}: 'Off'})"><span id="generalSaveSetting" style="margin: 0 auto;">${this.getDefault(`generalSave`, lang)}</span></div>
+				<div style="width: 100%;height: 100%;display: flex;align-items: center;cursor: pointer;margin: auto;border-top-left-radius: 5px;" id="generalSaveLabel" author-id="${this.authorId}"><span id="generalSaveSetting" style="margin: 0 auto;">${this.getDefault(`generalSave`, lang)}</span></div>
 			</label></div>
 		<div class="settingTitleColor" style="width: calc(50% - 1px);height: 2.5em;background-color: #ffffff69;border-top-right-radius: 5px;float: left;display: flex;align-items: center;position: relative;cursor: pointer;margin: 0 0 1px 1px;">
 			<label style="float: left;width: 100%;height: 100%;display: flex;align-items: center;cursor: pointer;margin: auto;" for="authorSave" class="settingCenterButton"><input style="cursor: pointer;appearance: none;" type="radio" name="saveCheck" id="authorSave">
-				<div style="width: 100%;height: 100%;display: flex;align-items: center;cursor: pointer;margin: auto;border-top-right-radius: 5px;" id="authorSaveLabel" onclick="setting.changeSaveSetting('authorSave');setting.setCookie({authorSaveCheck:'On', authorId_${this.authorId}: 'On'})"><span id="authorSaveSetting" style="margin: 0 auto;">${this.getDefault(`authorSave`, lang)}</span></div>
+				<div style="width: 100%;height: 100%;display: flex;align-items: center;cursor: pointer;margin: auto;border-top-right-radius: 5px;" id="authorSaveLabel" author-id="${this.authorId}"><span id="authorSaveSetting" style="margin: 0 auto;">${this.getDefault(`authorSave`, lang)}</span></div>
 			</label></div>
 		<div class="settingTitleColor" style="width: calc(25% - 1px);height: 2.5em;float: left;display: flex;align-items: center;position: relative;background-color: #ffffff69;margin: 1px 1px 1px 0;">
 			<p id="zipNameSetting" style="margin: 0 auto;">${this.getDefault(`zipName`, lang)}</p>
 		</div>
 		<div class="settingTitleColor" style="width: calc(60% - 1px);height: 2.5em;background-color: #ffffff69;float: left;display: flex;align-items: center;position: relative;cursor: pointer;margin: 1px 1px 1px 1px;">
-			<input id="zipNameInput" onchange="setting.changeName('zip')" placeholder="{postTitle}_{boxTitle}" style="margin: 0 auto;background: #ffffff2e;width: 95%;border-style: none;padding: 0.2em;">
+			<input id="zipNameInput" placeholder="{postTitle}_{boxTitle}" style="margin: 0 auto;background: #ffffff2e;width: 95%;border-style: none;padding: 0.2em;">
 		</div>
 		<div class="settingTitleColor" style="width: calc(15% - 2px);height: 2.5em;background-color: #ffffff69;float: left;display: flex;align-items: center;position: relative;margin: 1px auto 1px 1px;">
 			<p style="margin: 0 auto;">.zip</p>
@@ -609,7 +611,7 @@
 			<p id="fileNameSetting" style="margin: 0 auto;">${this.getDefault(`fileName`, lang)}</p>
 		</div>
 		<div class="settingTitleColor" style="width: calc(60% - 1px);height: 2.5em;background-color: #ffffff69;float: left;display: flex;align-items: center;position: relative;cursor: pointer;margin: 1px 1px 1px 1px;">
-			<input id="fileNameInput" onchange="setting.changeName('file')" placeholder="{imgIndex:0}" style="margin: 0 auto;background: #ffffff2e;width: 95%;border-style: none;padding: 0.2em;">
+			<input id="fileNameInput" placeholder="{imgIndex:0}" style="margin: 0 auto;background: #ffffff2e;width: 95%;border-style: none;padding: 0.2em;">
 		</div>
 		<div class="settingTitleColor" style="width: calc(15% - 2px);height: 2.5em;background-color: #ffffff69;float: left;display: flex;align-items: center;position: relative;margin: 1px auto 1px 1px;">
 			<p style="margin: 0 auto;">.{ext}</p>
@@ -618,16 +620,16 @@
 			<p id="dateFormatSetting" style="margin: 0 auto;">${this.getDefault(`dateFormat`, lang)}</p>
 		</div>
 		<div class="settingTitleColor" style="width: calc(50% - 1px);height: 2.5em;background-color: #ffffff69;float: left;display: flex;align-items: center;position: relative;margin: 1px auto 1px 1px;">
-			<input id="dateFormatInput" onchange="setting.setCookie({dateFormat: $('#dateFormatInput').val()})" style="margin: 0 auto;background: #ffffff2e;width: 95%;border-style: none;padding: 0.2em;text-align:center;">
+			<input id="dateFormatInput" style="margin: 0 auto;background: #ffffff2e;width: 95%;border-style: none;padding: 0.2em;text-align:center;">
 		</div>
 		<div id="paramsTable" class="settingTitleColor" style="width: 100%;height: calc(100% - 10em - 6px);position: relative;background-color: #ffffff69;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;float: left;margin: 1px 0 0 0;overflow: auto;">
 		</div>
 	</div>
 	<div class="settingTitleColor" style="width: 95%;height: 2.5em;background-color: #fff0;margin: 10px auto;position: relative;border-radius: 5px;">
-		<div class="settingCenterButton" style="width: calc(65% - 5px);height: 100%;background-color: #ffffff69;border-radius: 5px;float: left;cursor: pointer;display: flex;align-items: center;margin: 0 5px 0 0;" onclick="setting.saveCookie();">
+		<div class="settingCenterButton" id="saveSettingButton" style="width: calc(65% - 5px);height: 100%;background-color: #ffffff69;border-radius: 5px;float: left;cursor: pointer;display: flex;align-items: center;margin: 0 5px 0 0;">
 			<p id="saveSetting" style="margin: 0 auto;">${this.getDefault(`saveSetting`, lang)}</p>
 		</div>
-		<div class="settingCenterButton" style="width: calc(35% - 5px);height: 100%;background-color: #f65c5c9e;float: left;position: relative;border-radius: 5px;cursor: pointer;display: flex;align-items: center;margin: 0 0 0 5px;" onclick="$('#settingCenterDiv').addClass('close')">
+		<div class="settingCenterButton" id="closeSettingButton" style="width: calc(35% - 5px);height: 100%;background-color: #f65c5c9e;float: left;position: relative;border-radius: 5px;cursor: pointer;display: flex;align-items: center;margin: 0 0 0 5px;">
 			<p id="closeSetting" style="margin: 0 auto;">${this.getDefault(`closeSetting`, lang)}</p>
 		</div>
 	</div>
@@ -637,8 +639,8 @@
 
 	class downloader {
 		constructor(event) {
-			this.pageType = setting.pageType;
-			this.metaData = setting.metaData;
+			this.pageType = windowSetting.pageType;
+			this.metaData = windowSetting.metaData;
 			this.button = ($(event.target).is("button")) ? $(event.target) : $(event.target).closest("button");
 			this.boxType = this.button.attr("box-type");
 			this.postContent = $(event.target).closest(".boxIndex");
@@ -664,18 +666,18 @@
 				let p = `一般公開`;
 				this.metaData.category = "post";
 				this.metaData.indextype = "post";
-				this.metaData.srcArr = [setting.metaJson.post.thumb.original];
+				this.metaData.srcArr = [windowSetting.metaJson.post.thumb.original];
 				this.metaData.fee = p;
 				this.metaData.plan = p;
-				this.metaData.postDate = setting.metaJson.post.posted_at;
-				this.metaData.postId = setting.metaJson.post.uri.show.split("/").pop();
-				this.metaData.postTitle = setting.metaJson.post.title;
-				this.metaData.title = setting.metaJson.post.title;
+				this.metaData.postDate = windowSetting.metaJson.post.posted_at;
+				this.metaData.postId = windowSetting.metaJson.post.uri.show.split("/").pop();
+				this.metaData.postTitle = windowSetting.metaJson.post.title;
+				this.metaData.title = windowSetting.metaJson.post.title;
 				this.metaData.d = 1;
 			}
-			this.zipName = `${setting[`${(setting.authorSaveCheck == 'On') ? `author` : `general`}Save`].zipName}.zip`;
-			this.fileName = `${setting[`${(setting.authorSaveCheck == 'On') ? `author` : `general`}Save`].fileName}.{ext}`;
-			this.dateFormat = setting.dateFormat;
+			this.zipName = `${windowSetting[`${(windowSetting.authorSaveCheck == 'On') ? `author` : `general`}Save`].zipName}.zip`;
+			this.fileName = `${windowSetting[`${(windowSetting.authorSaveCheck == 'On') ? `author` : `general`}Save`].fileName}.{ext}`;
+			this.dateFormat = windowSetting.dateFormat;
 			this.zipfmt = ``;
 			this.zipImgIndex0 = 0;
 			this.filefmt = ``;
@@ -702,13 +704,13 @@
 					}
 					break;
 				case `catchLink`:
-					button.find('span').text(setting.getDefault(`retrieving`));
+					button.find('span').text(windowSetting.getDefault(`retrieving`));
 					break;
 				case `countTask`:
 					button.find('span').text(`${this.finCount} / ${this.imgSrc.length}`);
 					break;
 				case `pickUp`:
-					button.find('span').text(setting.getDefault(`zipping`));
+					button.find('span').text(windowSetting.getDefault(`zipping`));
 					break;
 				case `end`:
 					if (this.type == `file`) {
@@ -717,7 +719,7 @@
 						button.find('i').removeClass('fa-pulse').removeClass('fa-spinner').addClass('fa-file-archive-o');
 					}
 					button.removeClass(['active', 'hdr']);
-					button.find('span').text(setting.getDefault(`done`));
+					button.find('span').text(windowSetting.getDefault(`done`));
 					break;
 				case `log`:
 					button.find('span').text(input);
@@ -767,8 +769,11 @@
 			};
 
 			for (let k in o) {
-				if (new RegExp('(\\{' + k + '\\})', 'g').test(fmt)) fmt = fmt.replace(RegExp.$1, o[k]());
+				fmt = fmt.replaceAll(new RegExp('(\\{' + k + '\\})', 'g'), o[k]());
 			}
+
+			// prevent empty folder name when replace value is empty. e.g. `poseTitle//image.png`
+			fmt = fmt.replace(/(?:\\|\/){2,}/g, '/').replace(/^(\\|\/)/, '');
 
 			let s = (/\{imgIndex(\:(\d+))?\}/g.test(fmt)) ? RegExp.$2 : 0;
 			if (/\{imgIndex(\:(\d+))?\}/g.test(fmt)) fmt = fmt.replace(RegExp.$1, ``);
@@ -814,7 +819,7 @@
 								type: "blob"
 							},
 								function updateCallback(metadata) {
-									self.changeButton(`log`, `${setting.getDefault(`processing`)}：${metadata.percent.toFixed(2)} %`);
+									self.changeButton(`log`, `${windowSetting.getDefault(`processing`)}：${metadata.percent.toFixed(2)} %`);
 								}).then(function (content) {
 									self.changeButton('end');
 									downloader.download(content, self.nextName('zip', 0, mimeType));
@@ -827,13 +832,11 @@
 		}
 
 		static download(content, name) {
-			let tag = document.createElement('a');
-			tag.href = (URL || webkitURL).createObjectURL(content);
-			tag.download = name;
-			document.body.appendChild(tag);
-			tag.click();
-			document.body.removeChild(tag);
-			return;
+			GM_download({
+				name,
+				url: content instanceof Blob ? URL.createObjectURL(content) : content,
+				saveAs: false // this will popup "Save As" FileSavePicker window if set to true.
+			})
 		}
 
 		static getDigits(i) {
@@ -863,33 +866,71 @@
 		}
 	}
 
-	window.getDownLoadButton = () => {
+	const getDownLoadButton = () => {
 		$("div.post-content-inner").each((i, div) => {
 			$(div).addClass("boxIndex").attr("boxIndex", i);
-			$(div).find("div.btn-group-tabs").append(`<button box-type="box" class="btn btn-default btn-md downloadButton zip" onclick="getImg(event)"><i class="fa fa-file-archive-o fa-2x" style="color: #f9a63b  !important;"></i> <span class="btn-text-sub downloadSpanZip" style="color: #f9a63b  !important;">${setting.getDefault('downloadImgZip')}</span></button><button box-type="box" class="btn btn-default btn-md downloadButton file" onclick="getImg(event)"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${setting.getDefault('downloadImg')}</span></button>`);
+			$(div).find("div.btn-group-tabs").append(`<button box-type="box" class="btn btn-default btn-md downloadButton zip"><i class="fa fa-file-archive-o fa-2x" style="color: #f9a63b  !important;"></i> <span class="btn-text-sub downloadSpanZip" style="color: #f9a63b  !important;">${windowSetting.getDefault('downloadImgZip')}</span></button><button box-type="box" class="btn btn-default btn-md downloadButton file"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${windowSetting.getDefault('downloadImg')}</span></button>`);
 		});
-		$(`.the-post`).find("div.btn-group-tabs").append(`<button box-type="post" class="btn btn-default btn-md downloadButton zip" onclick="getImg(event)"><i class="fa fa-file-archive-o fa-2x" style="color: #f9a63b  !important;"></i> <span class="btn-text-sub downloadSpanZip" style="color: #f9a63b  !important;">${setting.getDefault('downloadImgZip')}</span></button><button box-type="post" class="btn btn-default btn-md downloadButton file" onclick="getImg(event)"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${setting.getDefault('downloadImg')}</span></button>`);
+		$(`.the-post`).find("div.btn-group-tabs").append(`<button box-type="post" class="btn btn-default btn-md downloadButton zip"><i class="fa fa-file-archive-o fa-2x" style="color: #f9a63b  !important;"></i> <span class="btn-text-sub downloadSpanZip" style="color: #f9a63b  !important;">${windowSetting.getDefault('downloadImgZip')}</span></button><button box-type="post" class="btn btn-default btn-md downloadButton file"><i class="fa fa-download fa-2x" style="color: #fe7070 !important;"></i> <span class="btn-text-sub downloadSpan" style="color: #fe7070 !important;">${windowSetting.getDefault('downloadImg')}</span></button>`);
 		$('.set-FD').remove();
-		$("div#page").append(`<div id="settingCenter" onclick="openSettingCenter()"></div>`);
-		$("div#page").append(setting.settingCenterTemplate());
-		setting.renderSettingParams().paramsTemplate();
-		return;
+		$("div#page").append(`<div id="settingCenter"></div>`);
+		$("div#page").append(windowSetting.settingCenterTemplate());
+		windowSetting.renderSettingParams().paramsTemplate();
 	};
 
-	window.openSettingCenter = () => {
-		if ($(`#settingCenterDiv`).hasClass(`close`)) {
-			$(`#settingCenterDiv`).removeClass(`close`);
-		}
-		return;
-	};
-
-	window.getImg = (event) => {
-		return checkBrowser(event, (event) => {
-			return new downloader(event);
+	/** Add listener to interactions, handles all buttons and inputs. */
+	const handleInteractions = () => {
+		// Download buttons
+		$('#settingCenter').on('click', () => {
+			if ($(`#settingCenterDiv`).hasClass(`close`)) {
+				$(`#settingCenterDiv`).removeClass(`close`);
+			}
 		});
-	};
+		$('.downloadButton').on('click', (event) => {
+			return checkBrowser(event, (event) => {
+				return new downloader(event);
+			});
+		})
+		// Setting menu
+		$('#cookieOn').on('click', () => {
+			windowSetting.setCookie({ cookieSave: 'On' });
+		})
+		$('#cookieOff').on('click', () => {
+			windowSetting.setCookie({ cookieSave: 'Off' });
+		})
+		$('#generalSaveLabel').on('click', (event) => {
+			const targetAuthorId = event.currentTarget.attributes['author-id'].value;
+			windowSetting.changeSaveSetting('generalSave');
+			windowSetting.setCookie({ authorSaveCheck: 'Off', [`authorId_${targetAuthorId}`]: 'Off' });
+		})
+		$('#authorSaveLabel').on('click', (event) => {
+			const targetAuthorId = event.currentTarget.attributes['author-id'].value;
+			windowSetting.changeSaveSetting('authorSave');
+			windowSetting.setCookie({ authorSaveCheck: 'On', [`authorId_${targetAuthorId}`]: 'On' });
+		})
+		$('#saveSettingButton').on('click', () => {
+			windowSetting.saveCookie();
+		})
+		$('#closeSettingButton').on('click', () => {
+			$('#settingCenterDiv').addClass('close');
+		})
+		// Language selector
+		$('#selectSetting').on('change', () => {
+			windowSetting.changeLang();
+		})
+		// Input
+		$('#zipNameInput').on('change', () => {
+			windowSetting.changeName('zip');
+		})
+		$('#fileNameInput').on('change', () => {
+			windowSetting.changeName('file');
+		})
+		$('#dateFormatInput').on('change', () => {
+			windowSetting.setCookie({ dateFormat: $('#dateFormatInput').val() });
+		})
+	}
 
-	window.checkBrowser = (event, callBack) => {
+	const checkBrowser = (event, callBack) => {
 		try {
 			let excludes = [];
 			let ex = excludes.map(b => navigator.userAgent.indexOf(b)).filter(b => (b != -1) ? true : false);
