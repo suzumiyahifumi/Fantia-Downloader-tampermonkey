@@ -12,7 +12,7 @@
 // @include        https://fantia.jp/posts/*
 // @include        https://fantia.jp/fanclubs/*/backnumbers*
 // @icon         https://www.google.com/s2/favicons?domain=fantia.jp
-// @require      https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js
+// @require      https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.45/dist/zip-full.min.js
 // @grant        none
 // ==/UserScript==
 
@@ -672,7 +672,10 @@
 			this.fileImgIndex0 = 0;
 			this.d = this.metaData.d;
 
-			this.zip = (this.type == `zip`) ? new JSZip() : undefined;
+			if (this.type === 'zip') {
+				const blobWriter = new zip.BlobWriter('application/zip');
+				this.zip = new zip.ZipWriter(blobWriter);
+			}	
 			return this.downloadImg();
 		}
 
@@ -785,31 +788,43 @@
 					dataCont += 1;
 					self.changeButton(`log`, `${dataCont} / ${self.metaData.srcArr.length}`);
 					self.mimeType = mimeType;
+					let content = new Blob([imgData], { type: mimeType });
 					if (self.zip == undefined) {
 						if (dataCont == self.metaData.srcArr.length) self.changeButton('end');
-						let content = new Blob([imgData], {
-							type: mimeType
-						});
+						
 						downloader.download(content, self.nextName('file', i, mimeType));
 						return;
 					} else {
-						const sDate = lastModified && lastModified !== '' ? new Date(lastModified) : null
-						const date = sDate ? new Date(sDate.getTime() - sDate.getTimezoneOffset() * 60000) : new Date()
-						self.zip.file(self.nextName('file', i, mimeType), imgData, {
-							date
-						});
-						if (dataCont == self.metaData.srcArr.length) {
+						const sDate = lastModified && lastModified !== '' ? new Date(lastModified) : null;
+						const date = sDate ?? new Date();
+						
+						self.zip.add(
+							self.nextName('file', i, mimeType),
+							new zip.BlobReader(content),
+							{
+								lastModDate: date,
+								level: 0	// The level of compression. 0 to 9, higher mean more compression.
+							}
+						);
+
+						if (dataCont === self.metaData.srcArr.length) {
+							console.log({zip: self.zip})
 							self.changeButton(`pickUp`);
-							self.zip.generateAsync({
-								type: "blob"
-							},
-								function updateCallback(metadata) {
-									self.changeButton(`log`, `${setting.getDefault(`processing`)}：${metadata.percent.toFixed(2)} %`);
-								}).then(function (content) {
+							self.zip
+								.close({
+									// this is not getting call, maybe a bug?
+									onprogress: (progress, total) => {
+										const percent = (progress / total) * 100;
+										self.changeButton(
+											`log`,
+											`${windowSetting.getDefault(`processing`)}：${percent.toFixed(2)} %`
+										);
+									}
+								})
+								.then(zipBlob => {
 									self.changeButton('end');
-									downloader.download(content, self.nextName('zip', 0, mimeType));
-									return;
-								});
+									downloader.download(zipBlob, self.nextName('zip', 0, 'application/zip'));
+							});
 						}
 					}
 				});
