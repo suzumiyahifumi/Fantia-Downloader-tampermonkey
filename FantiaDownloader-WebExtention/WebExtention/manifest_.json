@@ -20,20 +20,6 @@
   "background": {
     "scripts": ["background.js"]
   },
-  "web_accessible_resources": [
-	{
-     "resources": ["FantiaDownloader.js"],
-     "matches": ["http://*/*", "https://*/*"]
-   },
-	{
-     "resources": ["jquery-3.4.1.js"],
-     "matches": ["http://*/*", "https://*/*"]
-   },
-	{
-     "resources": ["jszip.js"],
-     "matches": ["http://*/*", "https://*/*"]
-   }
-  ],
   "host_permissions": [
     "*://*.fantia.jp/*"
   ],

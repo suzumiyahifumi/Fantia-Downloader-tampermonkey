@@ -10,6 +10,5 @@
         "matches" : ["https://fantia.jp/posts/*", "https://fantia.jp/fanclubs/*/backnumbers*"],  
         "js" : ["inject.js"]
     }  
-   ],
-  "web_accessible_resources": [ "FantiaDownloader.js", "jquery-3.4.1.js", "jszip.js" ]  
+  ]
 }
