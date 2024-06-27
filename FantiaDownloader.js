@@ -804,7 +804,7 @@
 					self.mimeType = mimeType;
 					if (self.zip == undefined) {
 						if (dataCont == self.metaData.srcArr.length) self.changeButton('end');
-						downloader.download(immData, self.nextName('file', i, mimeType));
+						downloader.download(imgData, self.nextName('file', i, mimeType));
 						return;
 					} else {
 						const sDate = lastModified && lastModified !== '' ? new Date(lastModified) : null;
