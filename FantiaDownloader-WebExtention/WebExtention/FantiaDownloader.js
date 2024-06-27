@@ -14,6 +14,8 @@
 // @icon         https://www.google.com/s2/favicons?domain=fantia.jp
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.0/jszip.min.js
 // @grant        GM_download
+// @grant		 GM_xmlhttpRequest
+// @connect		 fantia.jp
 // ==/UserScript==
 
 //log: 3.1.5 remove jQuery inject
