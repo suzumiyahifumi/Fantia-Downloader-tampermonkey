@@ -263,24 +263,27 @@
 
 			this.metaJson = {};
 			this.metaData = {};
-
-			if (window.csrfToken) {
-				$.ajaxSetup({
-					headers: {
-						"x-csrf-token": window.csrfToken
-					}
+			
+			const self = this;
+			
+			Promise.resolve(unsafeWindow)
+				.then(() => {
+					$.ajaxSetup({
+						headers: {
+							"x-csrf-token": unsafeWindow.csrfToken
+						}
+					});
+					$.get(this.jsonUrl, (json) => {
+						self.metaJson = json;
+						let data = json[self.pageType];
+						self.metaData = {
+							user: data.fanclub.creator_name,
+							uid: data.fanclub.id,
+							content: data[`${self.pageType}_contents`]
+						};
+					});
 				});
-			}
-			let self = this;
-			$.get(this.jsonUrl, (json) => {
-				self.metaJson = json;
-				let data = json[self.pageType];
-				self.metaData = {
-					user: data.fanclub.creator_name,
-					uid: data.fanclub.id,
-					content: data[`${self.pageType}_contents`]
-				};
-			});
+
 			return this;
 		}
 
