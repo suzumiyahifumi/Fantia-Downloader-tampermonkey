@@ -24,6 +24,10 @@
 	{
      "resources": ["jszip.js"],
      "matches": ["http://*/*", "https://*/*"]
+   },
+	{
+     "resources": ["zip-full.min.js"],
+     "matches": ["http://*/*", "https://*/*"]
    }
   ]  
 }
