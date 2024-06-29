@@ -14,6 +14,8 @@
 // @icon         https://www.google.com/s2/favicons?domain=fantia.jp
 // @require      https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.45/dist/zip-full.min.js
 // @grant        GM_download
+// @grant		 GM_xmlhttpRequest
+// @connect		 fantia.jp
 // ==/UserScript==
 
 //log: 3.1.5 remove jQuery inject
@@ -261,24 +263,27 @@
 
 			this.metaJson = {};
 			this.metaData = {};
-
-			if (window.csrfToken) {
-				$.ajaxSetup({
-					headers: {
-						"x-csrf-token": window.csrfToken
-					}
+			
+			const self = this;
+			
+			Promise.resolve(unsafeWindow)
+				.then(() => {
+					$.ajaxSetup({
+						headers: {
+							"x-csrf-token": unsafeWindow.csrfToken
+						}
+					});
+					$.get(this.jsonUrl, (json) => {
+						self.metaJson = json;
+						let data = json[self.pageType];
+						self.metaData = {
+							user: data.fanclub.creator_name,
+							uid: data.fanclub.id,
+							content: data[`${self.pageType}_contents`]
+						};
+					});
 				});
-			}
-			let self = this;
-			$.get(this.jsonUrl, (json) => {
-				self.metaJson = json;
-				let data = json[self.pageType];
-				self.metaData = {
-					user: data.fanclub.creator_name,
-					uid: data.fanclub.id,
-					content: data[`${self.pageType}_contents`]
-				};
-			});
+
 			return this;
 		}
 
@@ -799,7 +804,7 @@
 			this.changeButton(`log`, `${dataCont} / ${this.metaData.srcArr.length}`);
 			let self = this;
 			this.metaData.srcArr.forEach((url, i) => {
-				downloader.loadAsArrayBuffer(url, function (imgData, mimeType, lastModified) {
+				downloader.loadAsBlob(url, function (imgData, mimeType, lastModified) {
 					dataCont += 1;
 					self.changeButton(`log`, `${dataCont} / ${self.metaData.srcArr.length}`);
 					self.mimeType = mimeType;
@@ -862,21 +867,46 @@
 			return `${L}`;
 		}
 
-		static loadAsArrayBuffer(url, callback) {
-			let xhr = new XMLHttpRequest();
-			xhr.open("GET", url);
-			xhr.responseType = "arraybuffer";
-			xhr.onerror = function (error) {
-				return new Error(`ERROR`);
-			};
-			xhr.onload = function () {
-				if (xhr.status === 200) {
-					callback(xhr.response, xhr.getResponseHeader("Content-Type"), xhr.getResponseHeader("Last-Modified"));
-				} else {
-					return new Error(`ERROR`);
+		/**
+		 * Load file into Blob.
+		 * @param {string} url 
+		 * @param {(blob: Blob, contentType: string, lastModified: string) => *} callback 
+		 */
+		static loadAsBlob(url, callback) {
+			GM_xmlhttpRequest({
+				method: 'GET',
+				url,
+				responseType: 'blob',
+				onload: ({ response, responseHeaders }) => {
+					// parse header string
+					const headers = responseHeaders
+						.split('\r\n')
+						.filter(str => str !== '')
+						.map((str) => {
+							const [k, v] = str.split(': ');
+							return { [k]: v };
+						})
+						.reduce((per, cur) => Object.assign(per, cur));
+
+					callback(response, headers['content-type'], headers['last-modified']);
+				},
+				onerror: (err) => {
+					throw err;
 				}
-			};
-			xhr.send();
+			});
+		}
+
+		/**
+		 * `loadAsBlob` but async.
+		 * @param {string} url URL string 
+		 * @returns {Promise<Array<Blob | string> | Error>} If no error, reture values is store inside an array.
+		 */
+		static loadAsBlobAsync(url) {
+			return new Promise((resolve, reject) => {
+				this.loadAsBlob(url, (...args) => {
+					(args instanceof Error ? reject : resolve)(args);
+				})
+			})
 		}
 	}
 
