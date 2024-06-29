@@ -888,8 +888,6 @@
 						})
 						.reduce((per, cur) => Object.assign(per, cur));
 
-						debugger
-
 					callback(response, headers['content-type'], headers['last-modified']);
 				},
 				onerror: (err) => {
