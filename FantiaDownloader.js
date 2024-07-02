@@ -745,7 +745,7 @@
 				postTitle: () => {
 					return (this.metaData.postTitle || $("h1.post-title").text())
 						.replace(/\/|\\/g, REPLACE_CHAR)	// replace forward/backward slash
-						.replace(/^ +| +$/g, REPLACE_CHAR); // replace leading/trailing space
+						.replace(/^ +| +$|^\.|\.$/g, REPLACE_CHAR); // replace invalid leading/trailing character
 				},
 				postId: () => {
 					return this.metaData.postId || window.location.href.split("/").pop();
@@ -753,7 +753,7 @@
 				boxTitle: () => {
 					return (this.metaData.boxTitle || this.button.closest("div.post-content-inner").find('h2').text())
 						.replace(/\/|\\/g, REPLACE_CHAR)	// replace forward/backward slash
-						.replace(/^ +| +$/g, REPLACE_CHAR); // replace leading/trailing space
+						.replace(/^ +| +$|^\.|\.$/g, REPLACE_CHAR); // replace invalid leading/trailing character
 				},
 				plan: () => {
 					let feeStr = this.metaData.plan || this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
@@ -761,11 +761,11 @@
 					if (match != null) {
 						return (this.metaData.plan || feeStr.replace(match[0], ``))
 							.replace(/\/|\\/g, REPLACE_CHAR)	// replace forward/backward slash
-							.replace(/^ +| +$/g, REPLACE_CHAR); // replace leading/trailing space
+							.replace(/^ +| +$|^\.|\.$/g, REPLACE_CHAR); // replace invalid leading/trailing character
 					}
 					return (this.metaData.plan || `一般公開`)
 						.replace(/\/|\\/g, REPLACE_CHAR)	// replace forward/backward slash
-						.replace(/^ +| +$/g, REPLACE_CHAR); // replace leading/trailing space
+						.replace(/^ +| +$|^\.|\.$/g, REPLACE_CHAR); // replace invalid leading/trailing character
 				},
 				fee: () => {
 					let feeStr = this.metaData.fee || this.button.closest("div.post-content-inner").find(`div.post-content-for strong.ng-binding`).text();
