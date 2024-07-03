@@ -18,7 +18,8 @@
     }  
   ],
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["background.js"],
+    "service_worker": "background.js"
   },
   "host_permissions": [
     "*://*.fantia.jp/*"

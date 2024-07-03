@@ -1,10 +1,14 @@
+const browserType = typeof browser === "undefined" ? 'chromium' : 'firefox';
+const isServiceWorker = browserType === 'chromium';
+console.info('background env:', isServiceWorker ? 'service worker' : 'background script');
+
 /**
  * Useless version of `URL.createObjectURL`.
  * @param {Blob} blob 
  * @returns {Blob} 
  * @description background script won't be able to use blob url genarated in content scripts, just pass the blob to background script without convert it. 
  */
-URL.createObjectURL = (blob) => blob;
+if (!isServiceWorker) URL.createObjectURL = (blob) => blob;
 
 // replace unsafeWindow
 /** @type {Promise<{ csrfToken: string }>} */

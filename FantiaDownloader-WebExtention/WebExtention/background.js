@@ -37,7 +37,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendRes) => {
 
 function download({ url: data, filename, saveAs = false }) {
     return new Promise((resolve, reject) => {
-        const url = data instanceof Blob ? URL.createObjectURL(data) : data;
+        const isBlob = data instanceof Blob;
+        const url = isBlob ? URL.createObjectURL(data) : data;
         chrome.downloads.download({
                 url,
                 filename,
@@ -46,7 +47,7 @@ function download({ url: data, filename, saveAs = false }) {
             .then(resolve)
             .catch(reject)
             .finally(() => {
-                if (url.startsWith('blob')) setTimeout(() => URL.revokeObjectURL(url), 1000);
+                if (isBlob) setTimeout(() => URL.revokeObjectURL(url), 1000);
             });
     });
 }

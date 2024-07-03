@@ -1,4 +1,4 @@
-{
+{  
   "name": "__MSG_appName__",
   "version": "3.1.9",
   "description": "__MSG_appDesc__",
@@ -11,14 +11,15 @@
       "matches": ["https://fantia.jp/posts/*", "https://fantia.jp/fanclubs/*/backnumbers*"],  
       "js": [
         "jquery-3.4.1.js",
-        "jszip.js",
+        "zip-full.min.js",
         "userscriptAdapter.js",
         "FantiaDownloader.js"
       ]
     }  
   ],
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["background.js"],
+    "service_worker": "background.js"
   },
   "host_permissions": [
     "*://*.fantia.jp/*"
