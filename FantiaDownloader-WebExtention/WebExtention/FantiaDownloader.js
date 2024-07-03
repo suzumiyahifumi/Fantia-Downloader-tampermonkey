@@ -804,15 +804,14 @@
 			this.changeButton(`log`, `${dataCont} / ${this.metaData.srcArr.length}`);
 			let self = this;
 			this.metaData.srcArr.forEach((url, i) => {
-				downloader.loadAsBlob(url, function (imgData, mimeType, lastModified) {
+				downloader.loadAsBlob(url, function (blob, mimeType, lastModified) {
 					dataCont += 1;
 					self.changeButton(`log`, `${dataCont} / ${self.metaData.srcArr.length}`);
 					self.mimeType = mimeType;
-					let content = new Blob([imgData], { type: mimeType });
 					if (self.zip == undefined) {
 						if (dataCont == self.metaData.srcArr.length) self.changeButton('end');
 						
-						downloader.download(content, self.nextName('file', i, mimeType));
+						downloader.download(blob, self.nextName('file', i, mimeType));
 						return;
 					} else {
 						const sDate = lastModified && lastModified !== '' ? new Date(lastModified) : null;
@@ -820,7 +819,7 @@
 						
 						self.zip.add(
 							self.nextName('file', i, mimeType),
-							new zip.BlobReader(content),
+							new zip.BlobReader(blob),
 							{
 								lastModDate: date,
 								level: 0	// The level of compression. 0 to 9, higher mean more compression.
