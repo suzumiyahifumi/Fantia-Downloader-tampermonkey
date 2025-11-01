@@ -11,9 +11,11 @@
 // @author       suzumiyahifumi
 // @include        https://fantia.jp/posts/*
 // @include        https://fantia.jp/fanclubs/*/backnumbers*
+// @connect      fantia.jp
 // @icon         https://www.google.com/s2/favicons?domain=fantia.jp
 // @require      https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.45/dist/zip-full.min.js
 // @grant        GM_download
+// @grant        GM_xmlhttpRequest
 // ==/UserScript==
 
 //log: 3.1.5 remove jQuery inject
@@ -863,10 +865,46 @@
 		}
 
 		static loadAsArrayBuffer(url, callback) {
+			if (typeof GM_xmlhttpRequest === "function") {
+				downloader.loadAsArrayBufferWithGMXmlHttpRequest(url, callback);
+			} else {
+				downloader.loadAsArrayBufferWithXMLHttpRequest(url, callback);
+			}
+		}
+
+		static loadAsArrayBufferWithGMXmlHttpRequest(url, callback) {
+			GM_xmlhttpRequest({
+				method: "GET",
+				url,
+				responseType: "arraybuffer",
+				onerror: function () {
+					return new Error(`ERROR`);
+				},
+				onload: function (response) {
+					if (response.status === 200) {
+						const headers = {};
+						for (const header of response.responseHeaders.split("\r\n")) {
+							if (/^([\w-]+):\s*(.*)$/.test(header)) {
+								headers[RegExp.$1.toLowerCase()] = RegExp.$2;
+							}
+						}
+						callback(
+							response.response,
+							headers["content-type"],
+							headers["last-modified"]
+						);
+					} else {
+						return new Error(`ERROR`);
+					}
+				}
+			});
+		}
+
+		static loadAsArrayBufferWithXMLHttpRequest(url, callback) {
 			let xhr = new XMLHttpRequest();
 			xhr.open("GET", url);
 			xhr.responseType = "arraybuffer";
-			xhr.onerror = function (error) {
+			xhr.onerror = function () {
 				return new Error(`ERROR`);
 			};
 			xhr.onload = function () {
